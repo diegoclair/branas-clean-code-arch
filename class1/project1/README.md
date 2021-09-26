@@ -1,5 +1,5 @@
 # Description
-We have a file `old-cpfcode.js` that has an code tha should calculate if a CPF document is valid or not
+We have a file `old-cpfcode.js` that has an code that should calculate if a CPF document is valid or not
 
 ### ❗ First of all:
 * You need to have golang 1.15+ installed in your machine
