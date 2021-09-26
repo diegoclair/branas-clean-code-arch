@@ -40,19 +40,20 @@ func validateCPF(cpf string) bool {
 	}
 
 	firstDigit, _ := strconv.Atoi(cpf[lenToFirstDigit:lenToSecondDigit])
-	calculatedFirstDigit := calculateCPFDigit(cpf[:lenToFirstDigit], 10)
+	calculatedFirstDigit := calculateCPFDigit(cpf[:lenToFirstDigit])
 	isCorrect := firstDigit == calculatedFirstDigit
 	if !isCorrect {
 		return false
 	}
 
 	secondDigit, _ := strconv.Atoi(cpf[lenToSecondDigit:])
-	calculatedSecondDigit := calculateCPFDigit(cpf[:lenToSecondDigit], 11)
+	calculatedSecondDigit := calculateCPFDigit(cpf[:lenToSecondDigit])
 	isCorrect = secondDigit == calculatedSecondDigit
 	return isCorrect
 }
 
-func calculateCPFDigit(document string, multiplier int) int {
+func calculateCPFDigit(document string) int {
+	multiplier := len(document) + 1
 	sum := 0
 	for i := 0; i < len(document); i++ {
 		pos, _ := strconv.Atoi(string(document[i]))
