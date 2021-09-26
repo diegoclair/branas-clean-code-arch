@@ -1,13 +1,9 @@
-### Description :airplane:
+# Description
 Course about Clean Code and Clean Architecture by Rodrigo Branas
+We will have 8 mondays to talk about <b>Clean Code, SOLID, Refactoring, TDD, OO, Domain-Driven Design, Desing Patterns, Event Sourcing, CQRS, Clean Architecture and REST<b>
 
-## ▶️ Start application 💻 
+## Video about presentation about the course:
+https://www.youtube.com/watch?v=z9qqR5CfaEQ&t=77s
 
-
-### ❗ First of all:
-* You need to have docker installed in your computer.
-* run the command: `chmod +x .docker/entrypoint.sh`. 
-
-### Start ▶️
-To start the applciation, you need just to run the command `docker-compose up`.  
-When you see this message `your server stated on [::]:5000` so your app is running correctly!
+## References:
+https://app.branas.io/public/products/b1fe821c-8557-4ebb-9528-829f6e434ee9

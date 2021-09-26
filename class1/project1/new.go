@@ -6,6 +6,12 @@ import (
 	"strconv"
 )
 
+func main() {
+	fmt.Println(IsValidDocumentNumber("111.111.111-11"))
+	fmt.Println(IsValidDocumentNumber("123.456.789-99"))
+	fmt.Println(IsValidDocumentNumber("935.411.347-80"))
+}
+
 var notNumberRE = regexp.MustCompile(`\D`)
 
 func IsValidDocumentNumber(document string) bool {
@@ -86,10 +92,4 @@ func validateCNPJ(cnpj string) bool {
 // cleanNumber remove all not number characters
 func cleanNumber(value string) string {
 	return notNumberRE.ReplaceAllString(value, "")
-}
-
-func main() {
-	fmt.Println(IsValidDocumentNumber("111.111.111-11"))
-	fmt.Println(IsValidDocumentNumber("123.456.789-99"))
-	fmt.Println(IsValidDocumentNumber("935.411.347-80"))
 }
