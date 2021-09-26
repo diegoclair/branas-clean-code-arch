@@ -11,4 +11,4 @@ To run the code, inside of project1 folder, just run `go run new.go`
 If you want to run all tests, just run the command `go test *.go`
 
 ### Observations
-For the project was expected to implement CPF validation. At first moment, we only have CPF validation, but in the future, I want to implement CNPJ too.
+For the project was expected to implement CPF validation. At first moment, we only have CPF validation, but in the future, I want to implement CNPJ validation too.
