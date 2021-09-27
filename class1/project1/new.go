@@ -17,13 +17,11 @@ var notNumberRE = regexp.MustCompile(`\D`)
 func IsValidDocumentNumber(document string) bool {
 
 	document = cleanNumber(document)
-
 	isCPF := len(document) == 11
 	isCNPJ := len(document) == 14
 	if !isCPF && !isCNPJ {
 		return false
 	}
-
 	if isCPF {
 		return validateCPF(document)
 	}

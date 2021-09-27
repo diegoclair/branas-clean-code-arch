@@ -173,6 +173,13 @@ func TestIsValidDocumentNumber(t *testing.T) {
 			},
 			want: false,
 		},
+		{
+			name: "Invalid data as document 935.411.4347-81020 - Should return false",
+			args: args{
+				document: "935.411.4347-81020",
+			},
+			want: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
