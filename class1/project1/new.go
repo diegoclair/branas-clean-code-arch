@@ -16,16 +16,16 @@ var notNumberRE = regexp.MustCompile(`\D`)
 
 func IsValidDocumentNumber(document string) bool {
 
-	document = cleanNumber(document)
-	isCPF := len(document) == 11
-	isCNPJ := len(document) == 14
+	cleanedDocument := cleanNumber(document)
+	isCPF := len(cleanedDocument) == 11
+	isCNPJ := len(cleanedDocument) == 14
 	if !isCPF && !isCNPJ {
 		return false
 	}
 	if isCPF {
-		return validateCPF(document)
+		return validateCPF(cleanedDocument)
 	}
-	return validateCNPJ(document)
+	return validateCNPJ(cleanedDocument)
 }
 
 func validateCPF(cpf string) bool {
@@ -38,31 +38,40 @@ func validateCPF(cpf string) bool {
 	}
 
 	firstDigit, _ := strconv.Atoi(cpf[lenToFirstDigit:lenToSecondDigit])
-	calculatedFirstDigit := calculateCPFDigit(cpf[:lenToFirstDigit])
-	isCorrect := firstDigit == calculatedFirstDigit
-	if !isCorrect {
-		return false
-	}
-
 	secondDigit, _ := strconv.Atoi(cpf[lenToSecondDigit:])
-	calculatedSecondDigit := calculateCPFDigit(cpf[:lenToSecondDigit])
-	isCorrect = secondDigit == calculatedSecondDigit
-	return isCorrect
+	calculatedFirstDigit, calculatedSecondDigit := calculateCPFDigits(cpf)
+
+	return firstDigit == calculatedFirstDigit && secondDigit == calculatedSecondDigit
+
 }
 
-func calculateCPFDigit(document string) int {
-	multiplier := len(document) + 1
-	sum := 0
+func calculateCPFDigits(document string) (firstDigit, secondDigit int) {
+	lenTocalculateFirstDigit, lenTocalculateSecondDigit := 8, 9
+	factorForFirstDigit, factorForSecondDigit := 10, 11
+	sumFirstDigit, sumSecondDigit := 0, 0
 	for i := 0; i < len(document); i++ {
 		pos, _ := strconv.Atoi(string(document[i]))
-		sum += pos * multiplier
-		multiplier--
+		if i <= lenTocalculateFirstDigit {
+			sumFirstDigit += pos * factorForFirstDigit
+			factorForFirstDigit--
+		}
+		if i <= lenTocalculateSecondDigit {
+			sumSecondDigit += pos * factorForSecondDigit
+			factorForSecondDigit--
+		}
 	}
-	rest := sum % 11
-	if rest < 2 {
-		return 0
+	//234 287
+	fmt.Println(sumFirstDigit, sumSecondDigit)
+	rest := sumFirstDigit % 11
+	if rest >= 2 {
+		firstDigit = 11 - rest
 	}
-	return 11 - rest
+
+	rest = sumSecondDigit % 11
+	if rest >= 2 {
+		secondDigit = 11 - rest
+	}
+	return
 }
 
 func invalidEqualNumbers(document string) bool {

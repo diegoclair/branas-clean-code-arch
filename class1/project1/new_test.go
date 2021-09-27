@@ -37,34 +37,33 @@ func Test_invalidEqualNumbers(t *testing.T) {
 	}
 }
 
-func Test_calculateCPFDigit(t *testing.T) {
+func Test_calculateCPFDigits(t *testing.T) {
 	type args struct {
 		document string
 	}
 	tests := []struct {
-		name string
-		args args
-		want int
+		name            string
+		args            args
+		wantFirstDigit  int
+		wantSecondDigit int
 	}{
 		{
-			name: "should return 8 for first digit",
+			name: "should return 8 for first digit and 0 for second digit",
 			args: args{
-				document: "935411347",
+				document: "93541134780",
 			},
-			want: 8,
-		},
-		{
-			name: "should return 0 for second digit",
-			args: args{
-				document: "9354113478",
-			},
-			want: 0,
+			wantFirstDigit:  8,
+			wantSecondDigit: 0,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := calculateCPFDigit(tt.args.document); got != tt.want {
-				t.Errorf("calculateCPFDigit() = %v, want %v", got, tt.want)
+			gotFirstDigit, gotSecondDigit := calculateCPFDigits(tt.args.document)
+			if gotFirstDigit != tt.wantFirstDigit {
+				t.Errorf("calculateCPFDigits() gotFirstDigit = %v, want %v", gotFirstDigit, tt.wantFirstDigit)
+			}
+			if gotSecondDigit != tt.wantSecondDigit {
+				t.Errorf("calculateCPFDigits() gotSecondDigit = %v, want %v", gotSecondDigit, tt.wantSecondDigit)
 			}
 		})
 	}
