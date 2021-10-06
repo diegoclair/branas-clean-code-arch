@@ -1,7 +1,6 @@
 package validator
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 )
@@ -54,8 +53,6 @@ func calculateCPFDigits(document string) (firstDigit, secondDigit int) {
 			factorForSecondDigit--
 		}
 	}
-	//234 287
-	fmt.Println(sumFirstDigit, sumSecondDigit)
 	rest := sumFirstDigit % 11
 	if rest >= 2 {
 		firstDigit = 11 - rest
