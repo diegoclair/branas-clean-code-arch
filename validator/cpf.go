@@ -1,11 +1,8 @@
 package validator
 
 import (
-	"regexp"
 	"strconv"
 )
-
-var notNumberRE = regexp.MustCompile(`\D`)
 
 func IsValidDocumentNumber(document string) bool {
 
@@ -86,9 +83,4 @@ func validateCNPJ(cnpj string) bool {
 
 	//need to be implemented
 	return true
-}
-
-// cleanNumber remove all not number characters
-func cleanNumber(value string) string {
-	return notNumberRE.ReplaceAllString(value, "")
 }
