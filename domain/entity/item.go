@@ -17,3 +17,7 @@ func NewItem(id, quantity int64, category, description string, price float64) (i
 		Quantity:    quantity,
 	}
 }
+
+func (i *Item) getTotal() float64 {
+	return i.Price * float64(i.Quantity)
+}
