@@ -37,7 +37,6 @@ func TestNewItem(t *testing.T) {
 			},
 			wantItem: Item{
 				ItemID:      id,
-				Quantity:    quantity,
 				Category:    category,
 				Description: description,
 				Price:       price,
@@ -46,7 +45,7 @@ func TestNewItem(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotItem := NewItem(tt.args.id, tt.args.quantity, tt.args.category, tt.args.description, tt.args.price); !reflect.DeepEqual(gotItem, tt.wantItem) {
+			if gotItem := NewItem(tt.args.id, tt.args.category, tt.args.description, tt.args.price); !reflect.DeepEqual(gotItem, tt.wantItem) {
 				t.Errorf("NewItem() = %v, want %v", gotItem, tt.wantItem)
 			}
 		})

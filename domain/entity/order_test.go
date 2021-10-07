@@ -64,9 +64,9 @@ func TestNewOrderAddItems(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			order, _ := NewOrder(tt.args.document)
-			order.addItem(NewItem(1, 1, "Instrumentos Musicais", "Guitarra", 1119))
-			order.addItem(NewItem(1, 1, "Instrumentos Musicais", "Amplificador", 4259.99))
-			order.addItem(NewItem(1, 3, "Instrumentos Musicais", "Cabo", 30))
+			order.addItem(NewItem(1, "Instrumentos Musicais", "Guitarra", 1119), 1)
+			order.addItem(NewItem(1, "Instrumentos Musicais", "Amplificador", 4259.99), 1)
+			order.addItem(NewItem(1, "Instrumentos Musicais", "Cabo", 30), 3)
 			const totalShouldBe = 5468.99
 			total := order.getTotal()
 			if total != 5468.99 {
