@@ -48,16 +48,14 @@ func TestNewOrderAddItems(t *testing.T) {
 		document string
 	}
 	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
+		name string
+		args args
 	}{
 		{
 			name: "Should create an order with 3 items",
 			args: args{
 				document: "012.345.678-90",
 			},
-			wantErr: false,
 		},
 	}
 
@@ -69,7 +67,39 @@ func TestNewOrderAddItems(t *testing.T) {
 			order.addItem(NewItem(1, "Instrumentos Musicais", "Cabo", 30), 3)
 			const totalShouldBe = 5468.99
 			total := order.getTotal()
-			if total != 5468.99 {
+			if total != totalShouldBe {
+				t.Errorf("getTotal() got %v, want %v", total, totalShouldBe)
+			}
+		})
+	}
+}
+
+func TestNewOrderAddCoupon(t *testing.T) {
+	type args struct {
+		document string
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "Should create an order with 3 items",
+			args: args{
+				document: "012.345.678-90",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			order, _ := NewOrder(tt.args.document)
+			order.addItem(NewItem(1, "Instrumentos Musicais", "Guitarra", 1119), 1)
+			order.addItem(NewItem(1, "Instrumentos Musicais", "Amplificador", 4259.90), 1)
+			order.addItem(NewItem(1, "Instrumentos Musicais", "Cabo", 30), 3)
+			order.addCoupon(NewCoupon("VALE20", 20))
+			const totalShouldBe = 4375.12
+			total := order.getTotal()
+			if total != totalShouldBe {
 				t.Errorf("getTotal() got %v, want %v", total, totalShouldBe)
 			}
 		})
