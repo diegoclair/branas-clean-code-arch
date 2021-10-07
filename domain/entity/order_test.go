@@ -31,13 +31,46 @@ func TestNewOrderDocumentValidation(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := NewOrder(tt.args.document)
 			if err != nil && tt.wantErr && err.Error() != "invalid document" {
-				t.Errorf("MakeOrder() -> got = %v, expect = %v", err, "invalid document")
+				t.Errorf("MakeOrder() -> got = %v, want = %v", err, "invalid document")
 			}
 			if err != nil && !tt.wantErr {
-				t.Errorf("MakeOrder() -> got = %v, expect = nil", err)
+				t.Errorf("MakeOrder() -> got = %v, want = nil", err)
 			}
 			if err == nil && tt.wantErr {
-				t.Errorf("MakeOrder() got = %v, expect some error", err)
+				t.Errorf("MakeOrder() got = %v, want some error", err)
+			}
+		})
+	}
+}
+
+func TestNewOrderAddItems(t *testing.T) {
+	type args struct {
+		document string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Should create an order with 3 items",
+			args: args{
+				document: "012.345.678-90",
+			},
+			wantErr: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			order, _ := NewOrder(tt.args.document)
+			order.addItem(NewItem(1, 1, "Instrumentos Musicais", "Guitarra", 1119))
+			order.addItem(NewItem(1, 1, "Instrumentos Musicais", "Amplificador", 4259.99))
+			order.addItem(NewItem(1, 3, "Instrumentos Musicais", "Cabo", 30))
+			const totalShouldBe = 5468.99
+			total := order.getTotal()
+			if total != 5468.99 {
+				t.Errorf("getTotal() got %v, want %v", total, totalShouldBe)
 			}
 		})
 	}
