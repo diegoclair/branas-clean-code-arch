@@ -16,6 +16,9 @@ We will implement too payment process and a possibility to cancel an order.
 * 01/11/2021 - 
 * 08/11/2021 - 
 
+## Tests 
+If you want to execute all tests, just run the command `make tests`  
+
 ## Video about presentation about the course:
 https://www.youtube.com/watch?v=z9qqR5CfaEQ&t=77s
 
