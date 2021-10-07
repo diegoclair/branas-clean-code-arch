@@ -1,6 +1,9 @@
 package entity
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestNewOrderDocumentValidation(t *testing.T) {
 	type args struct {
@@ -102,6 +105,52 @@ func TestNewOrderAddCoupon(t *testing.T) {
 			if total != totalShouldBe {
 				t.Errorf("getTotal() got %v, want %v", total, totalShouldBe)
 			}
+		})
+	}
+}
+
+func TestNewOrderItem(t *testing.T) {
+	var (
+		id       int64   = 1
+		quantity int64   = 2
+		price    float64 = 60
+	)
+	type args struct {
+		id       int64
+		quantity int64
+		price    float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want OrderItem
+	}{
+		{
+			name: "Should create an order item and validate total",
+			args: args{
+				id:       id,
+				quantity: quantity,
+				price:    price,
+			},
+			want: OrderItem{
+				ItemID:   id,
+				Quantity: quantity,
+				Price:    price,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := NewOrderItem(tt.args.id, tt.args.quantity, tt.args.price)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewOrderItem() = %v, want %v", got, tt.want)
+			}
+			const totalShouldBe = 120
+			total := got.getTotal()
+			if total != totalShouldBe {
+				t.Errorf("NewOrderItem().getTotal() = %v, want %v", total, totalShouldBe)
+			}
+
 		})
 	}
 }

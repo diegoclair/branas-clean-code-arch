@@ -8,14 +8,10 @@ func IsValidDocumentNumber(document string) bool {
 
 	cleanedDocument := cleanNumber(document)
 	isCPF := len(cleanedDocument) == 11
-	isCNPJ := len(cleanedDocument) == 14
-	if !isCPF && !isCNPJ {
+	if !isCPF {
 		return false
 	}
-	if isCPF {
-		return validateCPF(cleanedDocument)
-	}
-	return validateCNPJ(cleanedDocument)
+	return validateCPF(cleanedDocument)
 }
 
 func validateCPF(cpf string) bool {
@@ -32,7 +28,6 @@ func validateCPF(cpf string) bool {
 	calculatedFirstDigit, calculatedSecondDigit := calculateCPFDigits(cpf)
 
 	return firstDigit == calculatedFirstDigit && secondDigit == calculatedSecondDigit
-
 }
 
 func calculateCPFDigits(document string) (firstDigit, secondDigit int) {
@@ -77,10 +72,4 @@ func invalidEqualNumbers(document string) bool {
 		break
 	}
 	return allNumbersAreEqual
-}
-
-func validateCNPJ(cnpj string) bool {
-
-	//need to be implemented
-	return true
 }

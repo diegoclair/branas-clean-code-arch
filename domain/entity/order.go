@@ -45,6 +45,14 @@ type OrderItem struct {
 	Price    float64
 }
 
+func NewOrderItem(id, quantity int64, price float64) OrderItem {
+	return OrderItem{
+		ItemID:   id,
+		Quantity: quantity,
+		Price:    price,
+	}
+}
+
 func (oi *OrderItem) getTotal() float64 {
 	return oi.Price * float64(oi.Quantity)
 }
