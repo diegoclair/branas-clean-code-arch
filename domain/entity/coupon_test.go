@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+var (
+	expiredCoupon = NewCoupon("VALE20", 20, time.Date(2021, time.April, 2, 0, 0, 0, 0, time.Local))
+)
+
 func TestNewCoupon(t *testing.T) {
 	var (
 		code           string = "VALE20"
@@ -46,11 +50,6 @@ func TestNewCoupon(t *testing.T) {
 }
 
 func TestCheckCouponExpiration(t *testing.T) {
-	var (
-		code           string    = "VALE20"
-		percentage     int64     = 20
-		expirationDate time.Time = time.Date(2021, time.April, 2, 0, 0, 0, 0, time.Local)
-	)
 	type args struct {
 		code           string
 		percentage     int64
@@ -64,17 +63,17 @@ func TestCheckCouponExpiration(t *testing.T) {
 		{
 			name: "Should get error with an expired coupon",
 			args: args{
-				code:           code,
-				percentage:     percentage,
-				expirationDate: expirationDate,
+				code:           expiredCoupon.Code,
+				percentage:     expiredCoupon.Percentage,
+				expirationDate: expiredCoupon.ExpirationDate,
 			},
 			want: true,
 		},
 		{
 			name: "Validate coupon that is not expired",
 			args: args{
-				code:           code,
-				percentage:     percentage,
+				code:           expiredCoupon.Code,
+				percentage:     expiredCoupon.Percentage,
 				expirationDate: time.Now().Add(24 * time.Hour),
 			},
 			want: false,
@@ -82,8 +81,8 @@ func TestCheckCouponExpiration(t *testing.T) {
 		{
 			name: "Validate coupon that never expires",
 			args: args{
-				code:           code,
-				percentage:     percentage,
+				code:           expiredCoupon.Code,
+				percentage:     expiredCoupon.Percentage,
 				expirationDate: time.Time{},
 			},
 			want: false,

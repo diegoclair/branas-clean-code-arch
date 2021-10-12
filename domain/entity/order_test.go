@@ -6,6 +6,12 @@ import (
 	"time"
 )
 
+var (
+	itemGuitarra    = NewItem(1, "Instrumentos Musicais", "Guitarra", 1119, 0, 0, 0)
+	itemAplificador = NewItem(1, "Instrumentos Musicais", "Amplificador", 4259.99, 0, 0, 0)
+	itemCabo        = NewItem(1, "Instrumentos Musicais", "Cabo", 30, 0, 0, 0)
+)
+
 func TestNewOrderDocumentValidation(t *testing.T) {
 	type args struct {
 		document string
@@ -66,9 +72,9 @@ func TestNewOrderAddItems(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			order, _ := NewOrder(tt.args.document)
-			order.addItem(NewItem(1, "Instrumentos Musicais", "Guitarra", 1119), 1)
-			order.addItem(NewItem(1, "Instrumentos Musicais", "Amplificador", 4259.99), 1)
-			order.addItem(NewItem(1, "Instrumentos Musicais", "Cabo", 30), 3)
+			order.addItem(itemGuitarra, 1)
+			order.addItem(itemAplificador, 1)
+			order.addItem(itemCabo, 3)
 			const totalShouldBe = 5468.99
 			total := order.getTotal()
 			if total != totalShouldBe {
@@ -87,7 +93,7 @@ func TestNewOrderAddCoupon(t *testing.T) {
 		args args
 	}{
 		{
-			name: "Should create an order with 3 items",
+			name: "Should create an order with 3 items with a coupon",
 			args: args{
 				document: "012.345.678-90",
 			},
@@ -97,11 +103,11 @@ func TestNewOrderAddCoupon(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			order, _ := NewOrder(tt.args.document)
-			order.addItem(NewItem(1, "Instrumentos Musicais", "Guitarra", 1119), 1)
-			order.addItem(NewItem(1, "Instrumentos Musicais", "Amplificador", 4259.90), 1)
-			order.addItem(NewItem(1, "Instrumentos Musicais", "Cabo", 30), 3)
+			order.addItem(itemGuitarra, 1)
+			order.addItem(itemAplificador, 1)
+			order.addItem(itemCabo, 3)
 			order.addCoupon(NewCoupon("VALE20", 20, time.Time{}))
-			const totalShouldBe = 4375.12
+			const totalShouldBe = 4375.19
 			total := order.getTotal()
 			if total != totalShouldBe {
 				t.Errorf("getTotal() got %v, want %v", total, totalShouldBe)
@@ -129,8 +135,8 @@ func TestNewOrderAddExpiredCoupon(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			order, _ := NewOrder(tt.args.document)
-			order.addItem(NewItem(1, "Instrumentos Musicais", "Guitarra", 1119), 1)
-			err := order.addCoupon(NewCoupon("VALE20", 20, time.Date(2021, time.April, 2, 0, 0, 0, 0, time.Local)))
+			order.addItem(itemGuitarra, 1)
+			err := order.addCoupon(expiredCoupon)
 			if err == nil {
 				t.Error("Expected error with an expired coupon and get error = nil")
 			}

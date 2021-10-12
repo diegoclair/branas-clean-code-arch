@@ -1,4 +1,4 @@
-package validator
+package utils
 
 import (
 	"strconv"
@@ -6,7 +6,7 @@ import (
 
 func IsValidDocumentNumber(document string) bool {
 
-	cleanedDocument := cleanNumber(document)
+	cleanedDocument := CleanNumber(document)
 	isCPF := len(cleanedDocument) == 11
 	if !isCPF {
 		return false

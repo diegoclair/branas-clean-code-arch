@@ -3,7 +3,7 @@ package entity
 import (
 	"errors"
 
-	"github.com/diegoclair/branas-clean-code-arch/validator"
+	"github.com/diegoclair/branas-clean-code-arch/utils"
 )
 
 type Order struct {
@@ -14,7 +14,7 @@ type Order struct {
 }
 
 func NewOrder(document string) (order Order, err error) {
-	if !validator.IsValidDocumentNumber(document) {
+	if !utils.IsValidDocumentNumber(document) {
 		return order, errors.New("invalid document")
 	}
 	order.Document = document
@@ -40,7 +40,7 @@ func (o *Order) getTotal() (total float64) {
 	if o.Coupon.Percentage > 0 {
 		total -= total * (float64(o.Coupon.Percentage) / 100)
 	}
-	return total
+	return utils.Round(total, 2)
 }
 
 type OrderItem struct {
