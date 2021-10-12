@@ -3,6 +3,7 @@ package entity
 import (
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestNewOrderDocumentValidation(t *testing.T) {
@@ -99,12 +100,45 @@ func TestNewOrderAddCoupon(t *testing.T) {
 			order.addItem(NewItem(1, "Instrumentos Musicais", "Guitarra", 1119), 1)
 			order.addItem(NewItem(1, "Instrumentos Musicais", "Amplificador", 4259.90), 1)
 			order.addItem(NewItem(1, "Instrumentos Musicais", "Cabo", 30), 3)
-			order.addCoupon(NewCoupon("VALE20", 20))
+			order.addCoupon(NewCoupon("VALE20", 20, time.Time{}))
 			const totalShouldBe = 4375.12
 			total := order.getTotal()
 			if total != totalShouldBe {
 				t.Errorf("getTotal() got %v, want %v", total, totalShouldBe)
 			}
+		})
+	}
+}
+
+func TestNewOrderAddExpiredCoupon(t *testing.T) {
+	type args struct {
+		document string
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "Should get error when try to add an expired coupon",
+			args: args{
+				document: "012.345.678-90",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			order, _ := NewOrder(tt.args.document)
+			order.addItem(NewItem(1, "Instrumentos Musicais", "Guitarra", 1119), 1)
+			err := order.addCoupon(NewCoupon("VALE20", 20, time.Date(2021, time.April, 2, 0, 0, 0, 0, time.Local)))
+			if err == nil {
+				t.Error("Expected error with an expired coupon and get error = nil")
+			}
+			expiredErrorMessage := "coupon is expired"
+			if err != nil && err.Error() != expiredErrorMessage {
+				t.Errorf("got %v - want %v", err.Error(), expiredErrorMessage)
+			}
+
 		})
 	}
 }

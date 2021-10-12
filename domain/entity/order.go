@@ -25,8 +25,12 @@ func (o *Order) addItem(item Item, quantity int64) {
 	o.OrderItems = append(o.OrderItems, OrderItem{ItemID: item.ItemID, Price: item.Price, Quantity: quantity})
 }
 
-func (o *Order) addCoupon(coupon Coupon) {
+func (o *Order) addCoupon(coupon Coupon) error {
+	if coupon.isExpired() {
+		return errors.New("coupon is expired")
+	}
 	o.Coupon = coupon
+	return nil
 }
 
 func (o *Order) getTotal() (total float64) {
