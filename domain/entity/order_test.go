@@ -116,7 +116,7 @@ func TestNewOrderAddCoupon(t *testing.T) {
 	}
 }
 
-func TestNewOrderAddExpiredCoupon(t *testing.T) {
+func TestOrderAddExpiredCoupon(t *testing.T) {
 	type args struct {
 		document string
 	}
