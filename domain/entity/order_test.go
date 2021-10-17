@@ -72,13 +72,13 @@ func TestNewOrderAddItems(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			order, _ := NewOrder(tt.args.document)
-			order.addItem(itemGuitarra, 1)
-			order.addItem(itemAplificador, 1)
-			order.addItem(itemCabo, 3)
+			order.AddItem(itemGuitarra, 1)
+			order.AddItem(itemAplificador, 1)
+			order.AddItem(itemCabo, 3)
 			const totalShouldBe = 5468.99
-			total := order.getTotal()
+			total := order.GetTotal()
 			if total != totalShouldBe {
-				t.Errorf("getTotal() got %v, want %v", total, totalShouldBe)
+				t.Errorf("GetTotal() got %v, want %v", total, totalShouldBe)
 			}
 		})
 	}
@@ -103,14 +103,14 @@ func TestNewOrderAddCoupon(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			order, _ := NewOrder(tt.args.document)
-			order.addItem(itemGuitarra, 1)
-			order.addItem(itemAplificador, 1)
-			order.addItem(itemCabo, 3)
-			order.addCoupon(NewCoupon("VALE20", 20, time.Time{}))
+			order.AddItem(itemGuitarra, 1)
+			order.AddItem(itemAplificador, 1)
+			order.AddItem(itemCabo, 3)
+			order.AddCoupon(NewCoupon("VALE20", 20, time.Time{}))
 			const totalShouldBe = 4375.19
-			total := order.getTotal()
+			total := order.GetTotal()
 			if total != totalShouldBe {
-				t.Errorf("getTotal() got %v, want %v", total, totalShouldBe)
+				t.Errorf("GetTotal() got %v, want %v", total, totalShouldBe)
 			}
 		})
 	}
@@ -135,8 +135,8 @@ func TestOrderAddExpiredCoupon(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			order, _ := NewOrder(tt.args.document)
-			order.addItem(itemGuitarra, 1)
-			err := order.addCoupon(expiredCoupon)
+			order.AddItem(itemGuitarra, 1)
+			err := order.AddCoupon(expiredCoupon)
 			if err == nil {
 				t.Error("Expected error with an expired coupon and get error = nil")
 			}
@@ -186,9 +186,9 @@ func TestNewOrderItem(t *testing.T) {
 				t.Errorf("NewOrderItem() = %v, want %v", got, tt.want)
 			}
 			const totalShouldBe = 120
-			total := got.getTotal()
+			total := got.GetTotal()
 			if total != totalShouldBe {
-				t.Errorf("NewOrderItem().getTotal() = %v, want %v", total, totalShouldBe)
+				t.Errorf("NewOrderItem().GetTotal() = %v, want %v", total, totalShouldBe)
 			}
 
 		})
@@ -214,13 +214,13 @@ func TestCalculateOrderFreight(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			order, _ := NewOrder(tt.args.document)
-			order.addItem(itemGuitarra, 1)
-			order.addItem(itemAplificador, 1)
-			order.addItem(itemCabo, 3)
+			order.AddItem(itemGuitarra, 1)
+			order.AddItem(itemAplificador, 1)
+			order.AddItem(itemCabo, 3)
 			const freightShouldBe = 260
-			freight := order.getFreight()
+			freight := order.GetFreight()
 			if freight != freightShouldBe {
-				t.Errorf("getFreight() got %v, want %v", freight, freightShouldBe)
+				t.Errorf("GetFreight() got %v, want %v", freight, freightShouldBe)
 			}
 		})
 	}

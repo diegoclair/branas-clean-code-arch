@@ -22,12 +22,12 @@ func NewOrder(document string) (order Order, err error) {
 	return order, nil
 }
 
-func (o *Order) addItem(item Item, quantity int64) {
+func (o *Order) AddItem(item Item, quantity int64) {
 	o.freight += item.getFreight() * float64(quantity)
 	o.OrderItems = append(o.OrderItems, OrderItem{ItemID: item.ItemID, Price: item.Price, Quantity: quantity})
 }
 
-func (o *Order) addCoupon(coupon Coupon) error {
+func (o *Order) AddCoupon(coupon Coupon) error {
 	if coupon.isExpired() {
 		return errors.New("coupon is expired")
 	}
@@ -35,9 +35,9 @@ func (o *Order) addCoupon(coupon Coupon) error {
 	return nil
 }
 
-func (o *Order) getTotal() (total float64) {
+func (o *Order) GetTotal() (total float64) {
 	for _, orderItem := range o.OrderItems {
-		total += orderItem.getTotal()
+		total += orderItem.GetTotal()
 	}
 	if o.Coupon.Percentage > 0 {
 		total -= total * (float64(o.Coupon.Percentage) / 100)
@@ -45,7 +45,7 @@ func (o *Order) getTotal() (total float64) {
 	return utils.Round(total, 2)
 }
 
-func (o *Order) getFreight() float64 {
+func (o *Order) GetFreight() float64 {
 	return o.freight
 }
 
@@ -63,6 +63,6 @@ func NewOrderItem(id, quantity int64, price float64) OrderItem {
 	}
 }
 
-func (oi *OrderItem) getTotal() float64 {
+func (oi *OrderItem) GetTotal() float64 {
 	return oi.Price * float64(oi.Quantity)
 }
