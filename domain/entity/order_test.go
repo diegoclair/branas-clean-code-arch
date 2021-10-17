@@ -7,9 +7,9 @@ import (
 )
 
 var (
-	itemGuitarra    = NewItem(1, "Instrumentos Musicais", "Guitarra", 1119, 0, 0, 0, 0)
-	itemAplificador = NewItem(1, "Instrumentos Musicais", "Amplificador", 4259.99, 0, 0, 0, 0)
-	itemCabo        = NewItem(1, "Instrumentos Musicais", "Cabo", 30, 0, 0, 0, 0)
+	itemGuitarra    = NewItem(1, "Instrumentos Musicais", "Guitarra", 1119, 100, 30, 10, 3)
+	itemAplificador = NewItem(1, "Instrumentos Musicais", "Amplificador", 4259.99, 100, 50, 50, 20)
+	itemCabo        = NewItem(1, "Instrumentos Musicais", "Cabo", 30, 10, 10, 10, 0.9)
 )
 
 func TestNewOrderDocumentValidation(t *testing.T) {
@@ -191,6 +191,37 @@ func TestNewOrderItem(t *testing.T) {
 				t.Errorf("NewOrderItem().getTotal() = %v, want %v", total, totalShouldBe)
 			}
 
+		})
+	}
+}
+
+func TestCalculateOrderFreight(t *testing.T) {
+	type args struct {
+		document string
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "Should create an order with 3 items and calculate it freight",
+			args: args{
+				document: "012.345.678-90",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			order, _ := NewOrder(tt.args.document)
+			order.addItem(itemGuitarra, 1)
+			order.addItem(itemAplificador, 1)
+			order.addItem(itemCabo, 3)
+			const freightShouldBe = 260
+			freight := order.getFreight()
+			if freight != freightShouldBe {
+				t.Errorf("getFreight() got %v, want %v", freight, freightShouldBe)
+			}
 		})
 	}
 }

@@ -129,3 +129,52 @@ func TestCalculateDensity(t *testing.T) {
 		})
 	}
 }
+
+func TestCalculateFreight(t *testing.T) {
+
+	tests := []struct {
+		name        string
+		args        itemArgs
+		wantFreight float64
+	}{
+		{
+			name: "Should create an item and get it freight",
+			args: itemArgs{
+				id:          id,
+				quantity:    quantity,
+				category:    category,
+				description: description,
+				price:       price,
+				width:       width,
+				height:      height,
+				length:      length,
+				weight:      weight,
+			},
+			wantFreight: 30,
+		},
+		{
+			name: "Should create an item and get the minimum freight",
+			args: itemArgs{
+				id:          id,
+				quantity:    quantity,
+				category:    category,
+				description: description,
+				price:       30,
+				width:       10,
+				height:      10,
+				length:      10,
+				weight:      0.9,
+			},
+			wantFreight: 10,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotItem := NewItem(tt.args.id, tt.args.category, tt.args.description, tt.args.price, tt.args.width, tt.args.height, tt.args.length, tt.args.weight)
+			gotFreight := gotItem.getFreight()
+			if gotFreight != tt.wantFreight {
+				t.Errorf("getFreight() = %v, want %v", gotFreight, tt.wantFreight)
+			}
+		})
+	}
+}

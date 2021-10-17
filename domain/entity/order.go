@@ -11,6 +11,7 @@ type Order struct {
 	Document   string
 	OrderItems []OrderItem
 	Coupon     Coupon
+	freight    float64
 }
 
 func NewOrder(document string) (order Order, err error) {
@@ -22,6 +23,7 @@ func NewOrder(document string) (order Order, err error) {
 }
 
 func (o *Order) addItem(item Item, quantity int64) {
+	o.freight += item.getFreight() * float64(quantity)
 	o.OrderItems = append(o.OrderItems, OrderItem{ItemID: item.ItemID, Price: item.Price, Quantity: quantity})
 }
 
@@ -41,6 +43,10 @@ func (o *Order) getTotal() (total float64) {
 		total -= total * (float64(o.Coupon.Percentage) / 100)
 	}
 	return utils.Round(total, 2)
+}
+
+func (o *Order) getFreight() float64 {
+	return o.freight
 }
 
 type OrderItem struct {
