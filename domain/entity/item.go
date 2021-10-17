@@ -8,9 +8,10 @@ type Item struct {
 	Width       float64
 	Height      float64
 	Length      float64
+	Weight      float64
 }
 
-func NewItem(id int64, category, description string, price, width, height, length float64) (item Item) {
+func NewItem(id int64, category, description string, price, width, height, length, weight float64) (item Item) {
 	return Item{
 		ItemID:      id,
 		Category:    category,
@@ -19,9 +20,14 @@ func NewItem(id int64, category, description string, price, width, height, lengt
 		Width:       width,
 		Height:      height,
 		Length:      length,
+		Weight:      weight,
 	}
 }
 
 func (i Item) getVolume() float64 {
 	return i.Width / 100 * i.Height / 100 * i.Length / 100
+}
+
+func (i Item) getDensity() float64 {
+	return i.Weight / i.getVolume()
 }

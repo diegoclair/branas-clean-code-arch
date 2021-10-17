@@ -7,9 +7,9 @@ import (
 )
 
 var (
-	itemGuitarra    = NewItem(1, "Instrumentos Musicais", "Guitarra", 1119, 0, 0, 0)
-	itemAplificador = NewItem(1, "Instrumentos Musicais", "Amplificador", 4259.99, 0, 0, 0)
-	itemCabo        = NewItem(1, "Instrumentos Musicais", "Cabo", 30, 0, 0, 0)
+	itemGuitarra    = NewItem(1, "Instrumentos Musicais", "Guitarra", 1119, 0, 0, 0, 0)
+	itemAplificador = NewItem(1, "Instrumentos Musicais", "Amplificador", 4259.99, 0, 0, 0, 0)
+	itemCabo        = NewItem(1, "Instrumentos Musicais", "Cabo", 30, 0, 0, 0, 0)
 )
 
 func TestNewOrderDocumentValidation(t *testing.T) {
