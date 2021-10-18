@@ -1,6 +1,7 @@
 package config
 
 import (
+	"log"
 	"sync"
 
 	"github.com/diegoclair/go_utils-lib/v2/logger"
@@ -16,7 +17,7 @@ var (
 func GetConfigEnvironment() *EnvironmentVariables {
 	once.Do(func() {
 
-		viper.SetConfigFile("config.toml")
+		viper.SetConfigFile("../../config.toml")
 		viper.AutomaticEnv()
 
 		err := viper.ReadInConfig()
@@ -26,14 +27,10 @@ func GetConfigEnvironment() *EnvironmentVariables {
 		}
 
 		config = &EnvironmentVariables{}
-		config.DB.User = viper.GetString("DB_USER")
-		config.DB.Pass = viper.GetString("DB_PASSWORD")
-		config.DB.Host = viper.GetString("DB_HOST")
-		config.DB.Port = viper.GetInt("DB_PORT")
-		config.DB.Name = viper.GetString("DB_NAME")
-		config.DB.MaxLifeInMinutes = viper.GetInt("MAX_LIFE_IN_MINUTES")
-		config.DB.MaxIdleConns = viper.GetInt("MAX_IDLE_CONNS")
-		config.DB.MaxOpenConns = viper.GetInt("MAX_OPEN_CONNS")
+		err = viper.Unmarshal(&config)
+		if err != nil {
+			log.Fatal(err)
+		}
 	})
 
 	return config

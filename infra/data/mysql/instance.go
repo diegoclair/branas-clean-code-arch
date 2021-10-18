@@ -29,7 +29,8 @@ func Connect() (conn *sql.DB, err error) {
 		)
 
 		log.Println("Connecting to database...")
-		db, connErr := sql.Open("mysql", dataSourceName)
+		var db *sql.DB
+		db, connErr = sql.Open("mysql", dataSourceName)
 		if connErr != nil {
 			return
 		}
@@ -41,12 +42,12 @@ func Connect() (conn *sql.DB, err error) {
 		}
 
 		log.Println("Creating database...")
-		if _, connErr = db.Exec("CREATE DATABASE IF NOT EXISTS sampamodas_db;"); connErr != nil {
+		if _, connErr = db.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s;", cfg.DB.Name)); connErr != nil {
 			logger.Error("Create Database error: ", connErr)
 			return
 		}
 
-		if _, connErr = db.Exec(fmt.Sprintf("USE %v;", cfg)); connErr != nil {
+		if _, connErr = db.Exec(fmt.Sprintf("USE %s;", cfg.DB.Name)); connErr != nil {
 			logger.Error("Default Database error: ", connErr)
 			return
 		}
