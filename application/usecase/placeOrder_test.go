@@ -36,6 +36,20 @@ func TestPlaceOrder(t *testing.T) {
 			wantTotal: 5468.99,
 			wantErr:   false,
 		},
+		{
+			name: "Shoud get an error with non exists item id",
+			args: modelOrder{
+				Cpf: "847.903.332-05",
+				OrderItems: []modelOrderItem{
+					{
+						ID:       55,
+						Quantity: 1,
+					},
+				},
+			},
+			wantTotal: 0,
+			wantErr:   true,
+		},
 	}
 
 	for _, tt := range tests {
