@@ -3,7 +3,7 @@ package usecase
 import (
 	"testing"
 
-	repositorymemory "github.com/diegoclair/branas-clean-code-arch/infra/RepositoryMemory"
+	repositorymemory "github.com/diegoclair/branas-clean-code-arch/infra/data/repositoryMemory"
 )
 
 func TestPlaceOrder(t *testing.T) {

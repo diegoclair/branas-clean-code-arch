@@ -6,6 +6,7 @@ import (
 )
 
 type orderRepositoryMemory struct {
+	orders []entity.Order
 }
 
 func NewOrderRepositoryMemory() repository.OrderRepository {
@@ -13,5 +14,6 @@ func NewOrderRepositoryMemory() repository.OrderRepository {
 }
 
 func (r *orderRepositoryMemory) Save(order entity.Order) (err error) {
+	r.orders = append(r.orders, order)
 	return nil
 }

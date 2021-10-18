@@ -1,0 +1,10 @@
+[db]
+host = "mysql-db-dev" #docker-host
+port = 3306
+name = "branas_app"
+user = "root"
+pass = "root"
+crypto-key = ""
+max-life-minutes = 1
+max-idle-conns = 5
+max-open-conns = 100
