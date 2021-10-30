@@ -3,6 +3,7 @@ package usecase
 import (
 	"testing"
 
+	"github.com/diegoclair/branas-clean-code-arch/application/dto"
 	repositorymemory "github.com/diegoclair/branas-clean-code-arch/infra/data/repositoryMemory"
 )
 
@@ -10,25 +11,25 @@ func TestPlaceOrder(t *testing.T) {
 
 	tests := []struct {
 		name      string
-		args      modelOrder
+		args      dto.OrderItemInput
 		wantTotal float64
 		wantErr   bool
 	}{
 		{
 			name: "Shoud place an order with 3 items",
-			args: modelOrder{
+			args: dto.OrderItemInput{
 				Cpf: "847.903.332-05",
-				OrderItems: []modelOrderItem{
+				OrderItems: []dto.OrderItems{
 					{
-						ID:       1,
+						ItemID:   1,
 						Quantity: 1,
 					},
 					{
-						ID:       2,
+						ItemID:   2,
 						Quantity: 1,
 					},
 					{
-						ID:       3,
+						ItemID:   3,
 						Quantity: 3,
 					},
 				},
@@ -38,11 +39,11 @@ func TestPlaceOrder(t *testing.T) {
 		},
 		{
 			name: "Shoud get an error with non exists item id",
-			args: modelOrder{
+			args: dto.OrderItemInput{
 				Cpf: "847.903.332-05",
-				OrderItems: []modelOrderItem{
+				OrderItems: []dto.OrderItems{
 					{
-						ID:       55,
+						ItemID:   55,
 						Quantity: 1,
 					},
 				},
