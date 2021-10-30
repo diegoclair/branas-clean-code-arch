@@ -38,6 +38,5 @@ func (u *newPlaceOrder) Execute(input dto.OrderItemInput) (response dto.OrderIte
 		return response, err
 	}
 
-	response.Total = order.GetTotal()
-	return response, nil
+	return response.Assembly(order), nil
 }
