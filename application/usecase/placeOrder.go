@@ -7,23 +7,37 @@ import (
 )
 
 type newPlaceOrder struct {
-	itemRepo  repository.ItemRepository
-	orderRepo repository.OrderRepository
+	itemRepo   repository.ItemRepository
+	orderRepo  repository.OrderRepository
+	couponRepo repository.CouponRepository
 }
 
-func NewPlaceOrder(itemRepo repository.ItemRepository, orderRepo repository.OrderRepository) *newPlaceOrder {
+func NewPlaceOrder(itemRepo repository.ItemRepository, orderRepo repository.OrderRepository, couponRepo repository.CouponRepository) *newPlaceOrder {
 	return &newPlaceOrder{
-		itemRepo:  itemRepo,
-		orderRepo: orderRepo,
+		itemRepo:   itemRepo,
+		orderRepo:  orderRepo,
+		couponRepo: couponRepo,
 	}
 }
 
-func (u *newPlaceOrder) Execute(input dto.OrderItemInput) (response dto.OrderItemOutput, err error) {
+func (u *newPlaceOrder) Execute(input dto.OrderInput) (response dto.OrderOutput, err error) {
 
-	order, err := entity.NewOrder(input.Cpf)
+	var sequence int64 = 1
+	order, err := entity.NewOrder(input.Cpf, sequence)
 	if err != nil {
 		return response, err
 	}
+	if input.Coupon != "" {
+		coupon, err := u.couponRepo.FindByCode(input.Coupon)
+		if err != nil {
+			return response, err
+		}
+		err = order.AddCoupon(coupon)
+		if err != nil {
+			return response, err
+		}
+	}
+
 	for _, orderItem := range input.OrderItems {
 
 		item, err := u.itemRepo.FindByID(orderItem.ItemID)

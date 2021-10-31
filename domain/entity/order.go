@@ -2,24 +2,38 @@ package entity
 
 import (
 	"errors"
+	"strconv"
+	"time"
 
 	"github.com/diegoclair/branas-clean-code-arch/utils"
 )
 
 type Order struct {
 	OrderID    int64
-	Document   string
+	Code       string
+	document   string
 	OrderItems []OrderItem
 	Coupon     Coupon
 	freight    float64
+	IssueDate  time.Time
+	Sequence   int64
 }
 
-func NewOrder(document string) (order Order, err error) {
+func NewOrder(document string, sequence int64) (order Order, err error) {
 	if !utils.IsValidDocumentNumber(document) {
 		return order, errors.New("invalid document")
 	}
-	order.Document = document
+	order.document = document
+	order.IssueDate = time.Now()
+	order.Sequence = sequence
+	order.generateCode(order.IssueDate, order.Sequence)
 	return order, nil
+}
+func (o *Order) generateCode(issueDate time.Time, sequence int64) {
+	y, _, _ := issueDate.Date()
+	year := strconv.Itoa(y)
+	seq := strconv.Itoa(int(sequence))
+	o.Code = year + utils.LeftPad(seq, 8, "0")
 }
 
 func (o *Order) AddItem(item Item, quantity int64) {
@@ -47,6 +61,10 @@ func (o *Order) GetTotal() (total float64) {
 
 func (o *Order) GetFreight() float64 {
 	return o.freight
+}
+
+func (o *Order) GetDocument() string {
+	return o.document
 }
 
 type OrderItem struct {

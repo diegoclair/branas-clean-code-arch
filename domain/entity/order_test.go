@@ -2,6 +2,7 @@ package entity
 
 import (
 	"reflect"
+	"strconv"
 	"testing"
 	"time"
 )
@@ -39,7 +40,7 @@ func TestNewOrderDocumentValidation(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := NewOrder(tt.args.document)
+			_, err := NewOrder(tt.args.document, 1)
 			if err != nil && tt.wantErr && err.Error() != "invalid document" {
 				t.Errorf("MakeOrder() -> got = %v, want = %v", err, "invalid document")
 			}
@@ -71,7 +72,7 @@ func TestNewOrderAddItems(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			order, _ := NewOrder(tt.args.document)
+			order, _ := NewOrder(tt.args.document, 1)
 			order.AddItem(itemGuitarra, 1)
 			order.AddItem(itemAplificador, 1)
 			order.AddItem(itemCabo, 3)
@@ -102,7 +103,7 @@ func TestNewOrderAddCoupon(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			order, _ := NewOrder(tt.args.document)
+			order, _ := NewOrder(tt.args.document, 1)
 			order.AddItem(itemGuitarra, 1)
 			order.AddItem(itemAplificador, 1)
 			order.AddItem(itemCabo, 3)
@@ -134,7 +135,7 @@ func TestOrderAddExpiredCoupon(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			order, _ := NewOrder(tt.args.document)
+			order, _ := NewOrder(tt.args.document, 1)
 			order.AddItem(itemGuitarra, 1)
 			err := order.AddCoupon(expiredCoupon)
 			if err == nil {
@@ -213,7 +214,7 @@ func TestCalculateOrderFreight(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			order, _ := NewOrder(tt.args.document)
+			order, _ := NewOrder(tt.args.document, 1)
 			order.AddItem(itemGuitarra, 1)
 			order.AddItem(itemAplificador, 1)
 			order.AddItem(itemCabo, 3)
@@ -221,6 +222,46 @@ func TestCalculateOrderFreight(t *testing.T) {
 			freight := order.GetFreight()
 			if freight != freightShouldBe {
 				t.Errorf("GetFreight() got %v, want %v", freight, freightShouldBe)
+			}
+		})
+	}
+}
+
+func TestNewOrderCodeValidation(t *testing.T) {
+
+	type args struct {
+		cpf      string
+		sequence int64
+	}
+
+	y, _, _ := time.Now().Date()
+	year := strconv.Itoa(y)
+	wantCode := year + "00000001"
+
+	tests := []struct {
+		name     string
+		args     args
+		wantCode string
+		wantErr  bool
+	}{
+		{
+			name: "Should create an order and validate the code",
+			args: args{
+				cpf:      "01234567890",
+				sequence: 1,
+			},
+			wantCode: wantCode,
+			wantErr:  false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := NewOrder(tt.args.cpf, tt.args.sequence)
+			if err != nil && !tt.wantErr || err == nil && tt.wantErr {
+				t.Errorf("NewOrder() error = %v, wantErr = %v", err, tt.wantErr)
+			}
+			if got.Code != tt.wantCode {
+				t.Errorf("NewOrder().Code = %v, want %v", got.Code, tt.wantCode)
 			}
 		})
 	}

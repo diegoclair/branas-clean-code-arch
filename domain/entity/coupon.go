@@ -3,6 +3,7 @@ package entity
 import "time"
 
 type Coupon struct {
+	CouponID       int64
 	Code           string
 	Percentage     int64
 	ExpirationDate time.Time

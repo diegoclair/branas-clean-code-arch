@@ -11,13 +11,13 @@ func TestPlaceOrder(t *testing.T) {
 
 	tests := []struct {
 		name      string
-		args      dto.OrderItemInput
+		args      dto.OrderInput
 		wantTotal float64
 		wantErr   bool
 	}{
 		{
 			name: "Shoud place an order with 3 items",
-			args: dto.OrderItemInput{
+			args: dto.OrderInput{
 				Cpf: "847.903.332-05",
 				OrderItems: []dto.OrderItems{
 					{
@@ -39,7 +39,7 @@ func TestPlaceOrder(t *testing.T) {
 		},
 		{
 			name: "Shoud get an error with non exists item id",
-			args: dto.OrderItemInput{
+			args: dto.OrderInput{
 				Cpf: "847.903.332-05",
 				OrderItems: []dto.OrderItems{
 					{
@@ -57,7 +57,8 @@ func TestPlaceOrder(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			itemRepo := repositorymemory.NewItemRepositoryMemory()
 			orderRepo := repositorymemory.NewOrderRepositoryMemory()
-			newPlaceOrder := NewPlaceOrder(itemRepo, orderRepo)
+			couponRepo := repositorymemory.NewCouponRepositoryMemory()
+			newPlaceOrder := NewPlaceOrder(itemRepo, orderRepo, couponRepo)
 			got, err := newPlaceOrder.Execute(tt.args)
 			if err == nil && tt.wantErr || err != nil && !tt.wantErr {
 				t.Errorf("got err = %v, want err? %v", err, tt.wantErr)
