@@ -38,6 +38,29 @@ func TestPlaceOrder(t *testing.T) {
 			wantErr:   false,
 		},
 		{
+			name: "Shoud place an order with 3 items and a coupon",
+			args: dto.OrderInput{
+				Cpf:    "847.903.332-05",
+				Coupon: "VALE20",
+				OrderItems: []dto.OrderItems{
+					{
+						ItemID:   1,
+						Quantity: 1,
+					},
+					{
+						ItemID:   2,
+						Quantity: 1,
+					},
+					{
+						ItemID:   3,
+						Quantity: 3,
+					},
+				},
+			},
+			wantTotal: 4375.19,
+			wantErr:   false,
+		},
+		{
 			name: "Shoud get an error with non exists item id",
 			args: dto.OrderInput{
 				Cpf: "847.903.332-05",
