@@ -83,7 +83,7 @@ func TestPlaceOrder(t *testing.T) {
 			couponRepo := repositorymemory.NewCouponRepositoryMemory()
 			newPlaceOrder := NewPlaceOrder(itemRepo, orderRepo, couponRepo)
 			got, err := newPlaceOrder.Execute(tt.args)
-			if err == nil && tt.wantErr || err != nil && !tt.wantErr {
+			if (err != nil) != tt.wantErr {
 				t.Errorf("got err = %v, want err? %v", err, tt.wantErr)
 			}
 			if got.Total != tt.wantTotal {

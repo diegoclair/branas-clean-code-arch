@@ -23,3 +23,7 @@ func (c Coupon) isExpired() bool {
 	}
 	return time.Now().After(c.ExpirationDate)
 }
+
+func (c Coupon) IsValid() bool {
+	return !c.isExpired()
+}
