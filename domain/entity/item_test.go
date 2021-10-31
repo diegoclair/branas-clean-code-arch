@@ -171,7 +171,7 @@ func TestCalculateFreight(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			gotItem := NewItem(tt.args.id, tt.args.category, tt.args.description, tt.args.price, tt.args.width, tt.args.height, tt.args.length, tt.args.weight)
-			gotFreight := gotItem.getFreight()
+			gotFreight := gotItem.GetFreight()
 			if gotFreight != tt.wantFreight {
 				t.Errorf("getFreight() = %v, want %v", gotFreight, tt.wantFreight)
 			}

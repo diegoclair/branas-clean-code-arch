@@ -37,7 +37,7 @@ func (o *Order) generateCode(issueDate time.Time, sequence int64) {
 }
 
 func (o *Order) AddItem(item Item, quantity int64) {
-	o.freight += item.getFreight() * float64(quantity)
+	o.freight += item.GetFreight() * float64(quantity)
 	o.OrderItems = append(o.OrderItems, OrderItem{ItemID: item.ItemID, Price: item.Price, Quantity: quantity})
 }
 
