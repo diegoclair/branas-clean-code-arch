@@ -7,7 +7,7 @@ import (
 	repositorymemory "github.com/diegoclair/branas-clean-code-arch/infra/data/repositoryMemory"
 )
 
-func Test_newCoupon_Execute(t *testing.T) {
+func TestCouponValidation(t *testing.T) {
 	type fields struct {
 		couponRepo repository.CouponRepository
 	}
