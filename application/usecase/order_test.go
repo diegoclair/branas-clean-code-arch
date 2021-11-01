@@ -154,7 +154,48 @@ func TestGetOrderByCode(t *testing.T) {
 	}
 }
 
+func Test_orderUsecase_GetOrders(t *testing.T) {
+
+	orderRepo := repositorymemory.NewOrderRepositoryMemory()
+	itemRepo := repositorymemory.NewItemRepositoryMemory()
+	couponRepo := repositorymemory.NewCouponRepositoryMemory()
+
+	//add 2 orders
+	_ = prepareOrderInput(orderRepo, itemRepo, couponRepo)
+	_ = prepareOrderInput(orderRepo, itemRepo, couponRepo)
+
+	tests := []struct {
+		name               string
+		wantOrdersQuantity int
+		wantErr            bool
+	}{
+		{
+			name:               "Should have two orders into repository",
+			wantOrdersQuantity: 2,
+			wantErr:            false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			u := &orderUsecase{
+				itemRepo:   itemRepo,
+				orderRepo:  orderRepo,
+				couponRepo: couponRepo,
+			}
+			gotOrdersOutput, err := u.GetOrders()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("orderUsecase.GetOrders() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if len(gotOrdersOutput) != tt.wantOrdersQuantity {
+				t.Errorf("len(orderUsecase.GetOrders()) = %v, want %v", gotOrdersOutput, tt.wantOrdersQuantity)
+			}
+		})
+	}
+}
+
 func prepareOrderInput(orderRepo contract.OrderRepository, itemRepo contract.ItemRepository, couponRepo contract.CouponRepository) (code string) {
+
 	orderInput := dto.CreateOrderInput{
 		Cpf:    "847.903.332-05",
 		Coupon: "VALE20",

@@ -32,6 +32,10 @@ func (r *orderRepositoryMemory) GetByCode(code string) (retVal entity.Order, err
 	return retVal, errors.New("order not found")
 }
 
+func (r *orderRepositoryMemory) GetOrders() (retVal []entity.Order, err error) {
+	return r.orders, nil
+}
+
 func (r *orderRepositoryMemory) GetOrderItemsByOrderID(orderID int64) (orderItems []entity.OrderItem, err error) {
 
 	for _, order := range r.orders {

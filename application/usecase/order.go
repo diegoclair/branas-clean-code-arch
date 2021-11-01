@@ -82,3 +82,30 @@ func (u *orderUsecase) GetOrderByCode(code string) (orderOutput dto.OrderOutput,
 
 	return orderOutput.Assembly(order), nil
 }
+
+func (u *orderUsecase) GetOrders() (ordersOutput []dto.OrderOutput, err error) {
+
+	orders, err := u.orderRepo.GetOrders()
+	if err != nil {
+		return ordersOutput, err
+	}
+
+	for i := range orders {
+		orders[i].OrderItems, err = u.orderRepo.GetOrderItemsByOrderID(orders[i].OrderID)
+		if err != nil {
+			return ordersOutput, err
+		}
+
+		if orders[i].Coupon.CouponID > 0 {
+			coupon, err := u.couponRepo.FindByCode(orders[i].Coupon.Code)
+			if err != nil {
+				return ordersOutput, err
+			}
+			orders[i].AddCoupon(coupon)
+		}
+		orderOutput := dto.OrderOutput{}
+		ordersOutput = append(ordersOutput, orderOutput.Assembly(orders[i]))
+	}
+
+	return ordersOutput, nil
+}

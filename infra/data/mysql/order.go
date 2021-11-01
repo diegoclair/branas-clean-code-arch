@@ -93,6 +93,45 @@ func (r *orderDatabase) GetByCode(code string) (order entity.Order, err error) {
 	return order, errors.New("order not found")
 }
 
+func (r *orderDatabase) GetOrders() (orders []entity.Order, err error) {
+	query := `
+		SELECT 
+			to.id,
+			to.code,
+			to.cpf,
+			to.coupon_id,
+			to.issue_date,
+			to.freight,
+			to.total,
+			to.sequence
+
+		FROM 	tab_order  to
+	`
+	rows, err := r.conn.Query(query)
+	if err != nil {
+		return orders, err
+	}
+	for rows.Next() {
+		order := entity.Order{}
+		err = rows.Scan(
+			&order.OrderID,
+			&order.Code,
+			&order.Document,
+			&order.Coupon.CouponID,
+			&order.IssueDate,
+			&order.Freight,
+			&order.Total,
+			&order.Sequence,
+		)
+		if err != nil {
+			return orders, err
+		}
+		orders = append(orders, order)
+	}
+
+	return orders, errors.New("order not found")
+}
+
 func (r *orderDatabase) GetOrderItemsByOrderID(orderID int64) (orderItems []entity.OrderItem, err error) {
 
 	queryItem := `
