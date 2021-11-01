@@ -6,17 +6,17 @@ import (
 	"github.com/diegoclair/branas-clean-code-arch/domain/service"
 )
 
-type newFreight struct {
+type freightUsecase struct {
 	itemRepo contract.ItemRepository
 }
 
-func NewFreight(itemRepo contract.ItemRepository) *newFreight {
-	return &newFreight{
+func NewFreightUsecase(itemRepo contract.ItemRepository) *freightUsecase {
+	return &freightUsecase{
 		itemRepo: itemRepo,
 	}
 }
 
-func (u *newFreight) Execute(input dto.FreightSimulationInput) (freight float64, err error) {
+func (u *freightUsecase) FreightSimulation(input dto.FreightSimulationInput) (freight float64, err error) {
 
 	for _, inputItem := range input.Items {
 

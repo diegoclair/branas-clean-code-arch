@@ -9,6 +9,10 @@ import (
 
 func TestPlaceOrder(t *testing.T) {
 
+	itemRepo := repositorymemory.NewItemRepositoryMemory()
+	orderRepo := repositorymemory.NewOrderRepositoryMemory()
+	couponRepo := repositorymemory.NewCouponRepositoryMemory()
+
 	tests := []struct {
 		name      string
 		args      dto.OrderInput
@@ -78,11 +82,12 @@ func TestPlaceOrder(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			itemRepo := repositorymemory.NewItemRepositoryMemory()
-			orderRepo := repositorymemory.NewOrderRepositoryMemory()
-			couponRepo := repositorymemory.NewCouponRepositoryMemory()
-			newPlaceOrder := NewPlaceOrder(itemRepo, orderRepo, couponRepo)
-			got, err := newPlaceOrder.Execute(tt.args)
+			u := &orderUsecase{
+				itemRepo:   itemRepo,
+				orderRepo:  orderRepo,
+				couponRepo: couponRepo,
+			}
+			got, err := u.PlaceOrder(tt.args)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("got err = %v, want err? %v", err, tt.wantErr)
 			}

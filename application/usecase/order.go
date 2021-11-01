@@ -6,21 +6,21 @@ import (
 	"github.com/diegoclair/branas-clean-code-arch/domain/entity"
 )
 
-type newPlaceOrder struct {
+type orderUsecase struct {
 	itemRepo   contract.ItemRepository
 	orderRepo  contract.OrderRepository
 	couponRepo contract.CouponRepository
 }
 
-func NewPlaceOrder(itemRepo contract.ItemRepository, orderRepo contract.OrderRepository, couponRepo contract.CouponRepository) *newPlaceOrder {
-	return &newPlaceOrder{
+func NewOrderUsecase(itemRepo contract.ItemRepository, orderRepo contract.OrderRepository, couponRepo contract.CouponRepository) *orderUsecase {
+	return &orderUsecase{
 		itemRepo:   itemRepo,
 		orderRepo:  orderRepo,
 		couponRepo: couponRepo,
 	}
 }
 
-func (u *newPlaceOrder) Execute(input dto.OrderInput) (response dto.OrderOutput, err error) {
+func (u *orderUsecase) PlaceOrder(input dto.OrderInput) (response dto.OrderOutput, err error) {
 
 	var sequence int64 = 1
 	order, err := entity.NewOrder(input.Cpf, sequence)
@@ -53,4 +53,9 @@ func (u *newPlaceOrder) Execute(input dto.OrderInput) (response dto.OrderOutput,
 	}
 
 	return response.Assembly(order), nil
+}
+
+func (u *orderUsecase) GetOrder() (order entity.Order, err error) {
+
+	return order, nil
 }

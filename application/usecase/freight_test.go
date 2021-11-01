@@ -9,6 +9,8 @@ import (
 
 func TestSimulateFreight(t *testing.T) {
 
+	itemRepo := repositorymemory.NewItemRepositoryMemory()
+
 	tests := []struct {
 		name        string
 		args        dto.FreightSimulationInput
@@ -40,9 +42,10 @@ func TestSimulateFreight(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			itemRepo := repositorymemory.NewItemRepositoryMemory()
-			newFreight := NewFreight(itemRepo)
-			got, err := newFreight.Execute(tt.args)
+			u := &freightUsecase{
+				itemRepo: itemRepo,
+			}
+			got, err := u.FreightSimulation(tt.args)
 			if err == nil && tt.wantErr || err != nil && !tt.wantErr {
 				t.Errorf("got err = %v, want err? %v", err, tt.wantErr)
 			}
