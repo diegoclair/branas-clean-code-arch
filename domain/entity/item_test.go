@@ -88,7 +88,7 @@ func TestCalculateVolume(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			gotItem := NewItem(tt.args.id, tt.args.category, tt.args.description, tt.args.price, tt.args.width, tt.args.height, tt.args.length, tt.args.weight)
-			gotVolume := gotItem.getVolume()
+			gotVolume := gotItem.GetVolume()
 			if gotVolume != tt.wantVolume {
 				t.Errorf("getVolume() = %v, want %v", gotVolume, tt.wantVolume)
 			}
@@ -122,7 +122,7 @@ func TestCalculateDensity(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			gotItem := NewItem(tt.args.id, tt.args.category, tt.args.description, tt.args.price, tt.args.width, tt.args.height, tt.args.length, tt.args.weight)
-			gotDensity := gotItem.getDensity()
+			gotDensity := gotItem.GetDensity()
 			if gotDensity != tt.wantDensity {
 				t.Errorf("getDensity() = %v, want %v", gotDensity, tt.wantDensity)
 			}

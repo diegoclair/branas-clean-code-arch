@@ -29,6 +29,7 @@ func NewOrder(document string, sequence int64) (order Order, err error) {
 	order.generateCode(order.IssueDate, order.Sequence)
 	return order, nil
 }
+
 func (o *Order) generateCode(issueDate time.Time, sequence int64) {
 	y, _, _ := issueDate.Date()
 	year := strconv.Itoa(y)

@@ -24,16 +24,16 @@ func NewItem(id int64, category, description string, price, width, height, lengt
 	}
 }
 
-func (i Item) getVolume() float64 {
+func (i Item) GetVolume() float64 {
 	return i.Width / 100 * i.Height / 100 * i.Length / 100
 }
 
-func (i Item) getDensity() float64 {
-	return i.Weight / i.getVolume()
+func (i Item) GetDensity() float64 {
+	return i.Weight / i.GetVolume()
 }
 
 func (i Item) GetFreight() float64 {
-	freight := 1000 * i.getVolume() * (i.getDensity() / 100)
+	freight := 1000 * i.GetVolume() * (i.GetDensity() / 100)
 	if freight < 10 {
 		return 10
 	}

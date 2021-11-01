@@ -3,13 +3,13 @@ package usecase
 import (
 	"testing"
 
-	"github.com/diegoclair/branas-clean-code-arch/domain/repository"
+	"github.com/diegoclair/branas-clean-code-arch/domain/contract"
 	repositorymemory "github.com/diegoclair/branas-clean-code-arch/infra/data/repositoryMemory"
 )
 
 func TestCouponValidation(t *testing.T) {
 	type fields struct {
-		couponRepo repository.CouponRepository
+		couponRepo contract.CouponRepository
 	}
 	type args struct {
 		code string

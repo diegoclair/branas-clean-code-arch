@@ -1,15 +1,15 @@
 package mysql
 
 import (
+	"github.com/diegoclair/branas-clean-code-arch/domain/contract"
 	"github.com/diegoclair/branas-clean-code-arch/domain/entity"
-	"github.com/diegoclair/branas-clean-code-arch/domain/repository"
 )
 
 type itemDatabase struct {
 	conn connenction
 }
 
-func NewItemDatabase(conn connenction) repository.ItemRepository {
+func NewItemDatabase(conn connenction) contract.ItemRepository {
 	return &itemDatabase{
 		conn: conn,
 	}

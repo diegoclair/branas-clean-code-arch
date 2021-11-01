@@ -3,15 +3,15 @@ package repositorymemory
 import (
 	"errors"
 
+	"github.com/diegoclair/branas-clean-code-arch/domain/contract"
 	"github.com/diegoclair/branas-clean-code-arch/domain/entity"
-	"github.com/diegoclair/branas-clean-code-arch/domain/repository"
 )
 
 type itemRepositoryMemory struct {
 	items []entity.Item
 }
 
-func NewItemRepositoryMemory() repository.ItemRepository {
+func NewItemRepositoryMemory() contract.ItemRepository {
 	return &itemRepositoryMemory{
 		items: []entity.Item{
 			entity.NewItem(1, "Instrumentos Musicais", "Guitarra", 1119, 100, 30, 10, 3),

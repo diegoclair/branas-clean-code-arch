@@ -1,15 +1,15 @@
 package repositorymemory
 
 import (
+	"github.com/diegoclair/branas-clean-code-arch/domain/contract"
 	"github.com/diegoclair/branas-clean-code-arch/domain/entity"
-	"github.com/diegoclair/branas-clean-code-arch/domain/repository"
 )
 
 type orderRepositoryMemory struct {
 	orders []entity.Order
 }
 
-func NewOrderRepositoryMemory() repository.OrderRepository {
+func NewOrderRepositoryMemory() contract.OrderRepository {
 	return &orderRepositoryMemory{}
 }
 

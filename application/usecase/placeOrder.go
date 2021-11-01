@@ -2,17 +2,17 @@ package usecase
 
 import (
 	"github.com/diegoclair/branas-clean-code-arch/application/dto"
+	"github.com/diegoclair/branas-clean-code-arch/domain/contract"
 	"github.com/diegoclair/branas-clean-code-arch/domain/entity"
-	"github.com/diegoclair/branas-clean-code-arch/domain/repository"
 )
 
 type newPlaceOrder struct {
-	itemRepo   repository.ItemRepository
-	orderRepo  repository.OrderRepository
-	couponRepo repository.CouponRepository
+	itemRepo   contract.ItemRepository
+	orderRepo  contract.OrderRepository
+	couponRepo contract.CouponRepository
 }
 
-func NewPlaceOrder(itemRepo repository.ItemRepository, orderRepo repository.OrderRepository, couponRepo repository.CouponRepository) *newPlaceOrder {
+func NewPlaceOrder(itemRepo contract.ItemRepository, orderRepo contract.OrderRepository, couponRepo contract.CouponRepository) *newPlaceOrder {
 	return &newPlaceOrder{
 		itemRepo:   itemRepo,
 		orderRepo:  orderRepo,

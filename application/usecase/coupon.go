@@ -1,12 +1,12 @@
 package usecase
 
-import "github.com/diegoclair/branas-clean-code-arch/domain/repository"
+import "github.com/diegoclair/branas-clean-code-arch/domain/contract"
 
 type newCoupon struct {
-	couponRepo repository.CouponRepository
+	couponRepo contract.CouponRepository
 }
 
-func NewCoupon(couponRepo repository.CouponRepository) *newCoupon {
+func NewCoupon(couponRepo contract.CouponRepository) *newCoupon {
 	return &newCoupon{
 		couponRepo: couponRepo,
 	}
