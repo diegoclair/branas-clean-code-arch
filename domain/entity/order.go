@@ -40,7 +40,7 @@ func (o *Order) GenerateCode(issueDate time.Time, sequence int64) {
 
 func (o *Order) AddItem(item Item, quantity int64) {
 	o.Freight += item.GetFreight() * float64(quantity)
-	o.OrderItems = append(o.OrderItems, OrderItem{Quantity: quantity, Item: Item{ItemID: item.ItemID, Price: item.Price}})
+	o.OrderItems = append(o.OrderItems, OrderItem{Quantity: quantity, Item: item})
 }
 
 func (o *Order) AddCoupon(coupon Coupon) error {
