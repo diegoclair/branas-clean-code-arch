@@ -20,9 +20,14 @@ func NewOrderUsecase(itemRepo contract.ItemRepository, orderRepo contract.OrderR
 	}
 }
 
-func (u *orderUsecase) PlaceOrder(input dto.OrderInput) (response dto.OrderOutput, err error) {
+func (u *orderUsecase) PlaceOrder(input dto.CreateOrderInput) (response dto.CreateOrderOutput, err error) {
 
-	var sequence int64 = 1
+	sequence, err := u.orderRepo.Count()
+	if err != nil {
+		return response, err
+	}
+	sequence++
+
 	order, err := entity.NewOrder(input.Cpf, sequence)
 	if err != nil {
 		return response, err
@@ -55,7 +60,35 @@ func (u *orderUsecase) PlaceOrder(input dto.OrderInput) (response dto.OrderOutpu
 	return response.Assembly(order), nil
 }
 
-func (u *orderUsecase) GetOrder() (order entity.Order, err error) {
+func (u *orderUsecase) GetOrderByCode(code string) (orderOutput dto.OrderOutput, err error) {
 
-	return order, nil
+	order, err := u.orderRepo.GetByCode(code)
+	if err != nil {
+		return orderOutput, err
+	}
+
+	ordermItems, err := u.orderRepo.GetOrderItemsByOrderID(order.OrderID)
+	if err != nil {
+		return orderOutput, err
+	}
+
+	if len(ordermItems) > 0 {
+		for _, ordermItem := range ordermItems {
+			item, err := u.itemRepo.FindByID(ordermItem.ItemID)
+			if err != nil {
+				return orderOutput, err
+			}
+			order.AddItem(item, ordermItem.Quantity)
+		}
+	}
+
+	if order.Coupon.Code != "" {
+		coupon, err := u.couponRepo.FindByCode(order.Coupon.Code)
+		if err != nil {
+			return orderOutput, err
+		}
+		order.AddCoupon(coupon)
+	}
+
+	return orderOutput.Assembly(order), nil
 }

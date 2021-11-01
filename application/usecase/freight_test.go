@@ -22,15 +22,15 @@ func TestSimulateFreight(t *testing.T) {
 			args: dto.FreightSimulationInput{
 				Items: []dto.OrderItems{
 					{
-						ItemID:   1,
+						Item:     dto.Item{ItemID: 1},
 						Quantity: 1,
 					},
 					{
-						ItemID:   2,
+						Item:     dto.Item{ItemID: 2},
 						Quantity: 1,
 					},
 					{
-						ItemID:   3,
+						Item:     dto.Item{ItemID: 3},
 						Quantity: 3,
 					},
 				},

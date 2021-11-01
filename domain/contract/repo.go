@@ -12,4 +12,7 @@ type ItemRepository interface {
 
 type OrderRepository interface {
 	Save(entity.Order) error
+	GetByCode(code string) (entity.Order, error)
+	GetOrderItemsByOrderID(orderID int64) ([]entity.OrderItem, error)
+	Count() (int64, error)
 }

@@ -174,9 +174,11 @@ func TestNewOrderItem(t *testing.T) {
 				price:    price,
 			},
 			want: OrderItem{
-				ItemID:   id,
 				Quantity: quantity,
-				Price:    price,
+				Item: Item{
+					ItemID: id,
+					Price:  price,
+				},
 			},
 		},
 	}
@@ -219,9 +221,8 @@ func TestCalculateOrderFreight(t *testing.T) {
 			order.AddItem(itemAplificador, 1)
 			order.AddItem(itemCabo, 3)
 			const freightShouldBe = 260
-			freight := order.GetFreight()
-			if freight != freightShouldBe {
-				t.Errorf("GetFreight() got %v, want %v", freight, freightShouldBe)
+			if order.Freight != freightShouldBe {
+				t.Errorf("GetFreight() got %v, want %v", order.Freight, freightShouldBe)
 			}
 		})
 	}

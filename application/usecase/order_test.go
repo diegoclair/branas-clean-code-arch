@@ -1,9 +1,14 @@
 package usecase
 
 import (
+	"reflect"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/diegoclair/branas-clean-code-arch/application/dto"
+	"github.com/diegoclair/branas-clean-code-arch/domain/contract"
+	"github.com/diegoclair/branas-clean-code-arch/domain/entity"
 	repositorymemory "github.com/diegoclair/branas-clean-code-arch/infra/data/repositoryMemory"
 )
 
@@ -15,25 +20,25 @@ func TestPlaceOrder(t *testing.T) {
 
 	tests := []struct {
 		name      string
-		args      dto.OrderInput
+		args      dto.CreateOrderInput
 		wantTotal float64
 		wantErr   bool
 	}{
 		{
 			name: "Shoud place an order with 3 items",
-			args: dto.OrderInput{
+			args: dto.CreateOrderInput{
 				Cpf: "847.903.332-05",
 				OrderItems: []dto.OrderItems{
 					{
-						ItemID:   1,
+						Item:     dto.Item{ItemID: 1},
 						Quantity: 1,
 					},
 					{
-						ItemID:   2,
+						Item:     dto.Item{ItemID: 2},
 						Quantity: 1,
 					},
 					{
-						ItemID:   3,
+						Item:     dto.Item{ItemID: 3},
 						Quantity: 3,
 					},
 				},
@@ -43,20 +48,20 @@ func TestPlaceOrder(t *testing.T) {
 		},
 		{
 			name: "Shoud place an order with 3 items and a coupon",
-			args: dto.OrderInput{
+			args: dto.CreateOrderInput{
 				Cpf:    "847.903.332-05",
 				Coupon: "VALE20",
 				OrderItems: []dto.OrderItems{
 					{
-						ItemID:   1,
+						Item:     dto.Item{ItemID: 1},
 						Quantity: 1,
 					},
 					{
-						ItemID:   2,
+						Item:     dto.Item{ItemID: 2},
 						Quantity: 1,
 					},
 					{
-						ItemID:   3,
+						Item:     dto.Item{ItemID: 3},
 						Quantity: 3,
 					},
 				},
@@ -66,11 +71,11 @@ func TestPlaceOrder(t *testing.T) {
 		},
 		{
 			name: "Shoud get an error with non exists item id",
-			args: dto.OrderInput{
+			args: dto.CreateOrderInput{
 				Cpf: "847.903.332-05",
 				OrderItems: []dto.OrderItems{
 					{
-						ItemID:   55,
+						Item:     dto.Item{ItemID: 55},
 						Quantity: 1,
 					},
 				},
@@ -95,6 +100,125 @@ func TestPlaceOrder(t *testing.T) {
 				t.Errorf("got total = %v, want %v", got.Total, tt.wantTotal)
 			}
 
+		})
+	}
+}
+
+func TestGetOrderByCode(t *testing.T) {
+
+	itemRepo := repositorymemory.NewItemRepositoryMemory()
+	orderRepo := repositorymemory.NewOrderRepositoryMemory()
+	couponRepo := repositorymemory.NewCouponRepositoryMemory()
+
+	inputOrder := dto.CreateOrderInput{
+		Cpf:    "847.903.332-05",
+		Coupon: "VALE20",
+		OrderItems: []dto.OrderItems{
+			{
+				Item:     dto.Item{ItemID: 1},
+				Quantity: 1,
+			},
+			{
+				Item:     dto.Item{ItemID: 2},
+				Quantity: 1,
+			},
+			{
+				Item:     dto.Item{ItemID: 3},
+				Quantity: 3,
+			},
+		},
+	}
+	var sequence int = 1
+	order, _ := entity.NewOrder(inputOrder.Cpf, int64(sequence))
+	for _, orderItem := range inputOrder.OrderItems {
+		item, _ := itemRepo.FindByID(orderItem.ItemID)
+		order.AddItem(item, orderItem.Quantity)
+	}
+	coupon, _ := couponRepo.FindByCode(inputOrder.Coupon)
+	order.AddCoupon(coupon)
+	orderRepo.Save(order)
+
+	y, _, _ := time.Now().Date()
+	year := strconv.Itoa(y)
+	code := year + "0000000" + strconv.Itoa(sequence)
+
+	type args struct {
+		orderRepo  contract.OrderRepository
+		itemRepo   contract.ItemRepository
+		couponRepo contract.CouponRepository
+		code       string
+	}
+	tests := []struct {
+		name      string
+		args      args
+		wantTotal float64
+		wantErr   bool
+	}{
+		{
+			name: "Should get an order by it code",
+			args: args{
+				orderRepo:  orderRepo,
+				itemRepo:   itemRepo,
+				couponRepo: couponRepo,
+				code:       code,
+			},
+			wantTotal: 4375.19,
+			wantErr:   false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			u := &orderUsecase{
+				itemRepo:   itemRepo,
+				orderRepo:  orderRepo,
+				couponRepo: couponRepo,
+			}
+			got, err := u.GetOrderByCode(tt.args.code)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetOrderByCode() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if got.Total != tt.wantTotal {
+				t.Errorf("GetOrderByCode().Total = %v, wantCode %v", got.Total, tt.wantTotal)
+			}
+		})
+	}
+}
+
+func Test_orderUsecase_GetOrderByCode(t *testing.T) {
+	type fields struct {
+		itemRepo   contract.ItemRepository
+		orderRepo  contract.OrderRepository
+		couponRepo contract.CouponRepository
+	}
+	type args struct {
+		code string
+	}
+	tests := []struct {
+		name            string
+		fields          fields
+		args            args
+		wantOrderOutput dto.OrderOutput
+		wantErr         bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			u := &orderUsecase{
+				itemRepo:   tt.fields.itemRepo,
+				orderRepo:  tt.fields.orderRepo,
+				couponRepo: tt.fields.couponRepo,
+			}
+			gotOrderOutput, err := u.GetOrderByCode(tt.args.code)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("orderUsecase.GetOrderByCode() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotOrderOutput, tt.wantOrderOutput) {
+				t.Errorf("orderUsecase.GetOrderByCode() = %v, want %v", gotOrderOutput, tt.wantOrderOutput)
+			}
 		})
 	}
 }
