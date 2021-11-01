@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"reflect"
 	"strconv"
 	"testing"
 	"time"
@@ -106,42 +105,11 @@ func TestPlaceOrder(t *testing.T) {
 
 func TestGetOrderByCode(t *testing.T) {
 
-	itemRepo := repositorymemory.NewItemRepositoryMemory()
 	orderRepo := repositorymemory.NewOrderRepositoryMemory()
+	itemRepo := repositorymemory.NewItemRepositoryMemory()
 	couponRepo := repositorymemory.NewCouponRepositoryMemory()
 
-	inputOrder := dto.CreateOrderInput{
-		Cpf:    "847.903.332-05",
-		Coupon: "VALE20",
-		OrderItems: []dto.OrderItems{
-			{
-				Item:     dto.Item{ItemID: 1},
-				Quantity: 1,
-			},
-			{
-				Item:     dto.Item{ItemID: 2},
-				Quantity: 1,
-			},
-			{
-				Item:     dto.Item{ItemID: 3},
-				Quantity: 3,
-			},
-		},
-	}
-	var sequence int = 1
-	order, _ := entity.NewOrder(inputOrder.Cpf, int64(sequence))
-	for _, orderItem := range inputOrder.OrderItems {
-		item, _ := itemRepo.FindByID(orderItem.ItemID)
-		order.AddItem(item, orderItem.Quantity)
-	}
-	coupon, _ := couponRepo.FindByCode(inputOrder.Coupon)
-	order.AddCoupon(coupon)
-	orderRepo.Save(order)
-
-	y, _, _ := time.Now().Date()
-	year := strconv.Itoa(y)
-	code := year + "0000000" + strconv.Itoa(sequence)
-
+	code := prepareOrderInput(orderRepo, itemRepo, couponRepo)
 	type args struct {
 		orderRepo  contract.OrderRepository
 		itemRepo   contract.ItemRepository
@@ -186,39 +154,37 @@ func TestGetOrderByCode(t *testing.T) {
 	}
 }
 
-func Test_orderUsecase_GetOrderByCode(t *testing.T) {
-	type fields struct {
-		itemRepo   contract.ItemRepository
-		orderRepo  contract.OrderRepository
-		couponRepo contract.CouponRepository
+func prepareOrderInput(orderRepo contract.OrderRepository, itemRepo contract.ItemRepository, couponRepo contract.CouponRepository) (code string) {
+	orderInput := dto.CreateOrderInput{
+		Cpf:    "847.903.332-05",
+		Coupon: "VALE20",
+		OrderItems: []dto.OrderItems{
+			{
+				Item:     dto.Item{ItemID: 1},
+				Quantity: 1,
+			},
+			{
+				Item:     dto.Item{ItemID: 2},
+				Quantity: 1,
+			},
+			{
+				Item:     dto.Item{ItemID: 3},
+				Quantity: 3,
+			},
+		},
 	}
-	type args struct {
-		code string
+	const sequence = 1
+	order, _ := entity.NewOrder(orderInput.Cpf, sequence)
+	for _, orderItem := range orderInput.OrderItems {
+		item, _ := itemRepo.FindByID(orderItem.ItemID)
+		order.AddItem(item, orderItem.Quantity)
 	}
-	tests := []struct {
-		name            string
-		fields          fields
-		args            args
-		wantOrderOutput dto.OrderOutput
-		wantErr         bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			u := &orderUsecase{
-				itemRepo:   tt.fields.itemRepo,
-				orderRepo:  tt.fields.orderRepo,
-				couponRepo: tt.fields.couponRepo,
-			}
-			gotOrderOutput, err := u.GetOrderByCode(tt.args.code)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("orderUsecase.GetOrderByCode() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(gotOrderOutput, tt.wantOrderOutput) {
-				t.Errorf("orderUsecase.GetOrderByCode() = %v, want %v", gotOrderOutput, tt.wantOrderOutput)
-			}
-		})
-	}
+	coupon, _ := couponRepo.FindByCode(orderInput.Coupon)
+	order.AddCoupon(coupon)
+	orderRepo.Save(&order)
+
+	y, _, _ := time.Now().Date()
+	year := strconv.Itoa(y)
+	code = year + "0000000" + strconv.Itoa(sequence)
+	return code
 }

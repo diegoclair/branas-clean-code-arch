@@ -17,7 +17,7 @@ func NewOrderDatabase(conn connenction) contract.OrderRepository {
 	}
 }
 
-func (r *orderDatabase) Save(order entity.Order) (err error) {
+func (r *orderDatabase) Save(order *entity.Order) (err error) {
 	query := `
 		INSERT INTO tab_order 
 			(code, cpf, coupon_id, issue_date, freight, total, sequence) VALUES
@@ -69,7 +69,8 @@ func (r *orderDatabase) GetByCode(code string) (order entity.Order, err error) {
 				to.cpf,
 				to.coupon_id,
 				to.issue_date,
-				to.freight, 
+				to.freight,
+				to.total,
 				to.sequence
 
 		FROM 	tab_order  to
@@ -82,6 +83,7 @@ func (r *orderDatabase) GetByCode(code string) (order entity.Order, err error) {
 		&order.Document,
 		&order.IssueDate,
 		&order.Freight,
+		&order.Total,
 		&order.Sequence,
 	)
 	if err != nil {

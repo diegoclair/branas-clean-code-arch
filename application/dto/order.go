@@ -25,7 +25,7 @@ type CreateOrderOutput struct {
 }
 
 func (o CreateOrderOutput) Assembly(order entity.Order) CreateOrderOutput {
-	o.Total = order.GetTotal()
+	o.Total = order.Total
 	o.OrderCode = order.Code
 	return o
 }
@@ -49,6 +49,6 @@ func (o OrderOutput) Assembly(order entity.Order) OrderOutput {
 		}
 		o.OrderItems = append(o.OrderItems, orderItemOutput)
 	}
-	o.Total = order.GetTotal()
+	o.Total = order.Total
 	return o
 }

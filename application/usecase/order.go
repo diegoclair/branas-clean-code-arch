@@ -52,7 +52,7 @@ func (u *orderUsecase) PlaceOrder(input dto.CreateOrderInput) (response dto.Crea
 		order.AddItem(item, orderItem.Quantity)
 	}
 
-	err = u.orderRepo.Save(order)
+	err = u.orderRepo.Save(&order)
 	if err != nil {
 		return response, err
 	}
@@ -67,20 +67,20 @@ func (u *orderUsecase) GetOrderByCode(code string) (orderOutput dto.OrderOutput,
 		return orderOutput, err
 	}
 
-	ordermItems, err := u.orderRepo.GetOrderItemsByOrderID(order.OrderID)
+	order.OrderItems, err = u.orderRepo.GetOrderItemsByOrderID(order.OrderID)
 	if err != nil {
 		return orderOutput, err
 	}
 
-	if len(ordermItems) > 0 {
-		for _, ordermItem := range ordermItems {
-			item, err := u.itemRepo.FindByID(ordermItem.ItemID)
-			if err != nil {
-				return orderOutput, err
-			}
-			order.AddItem(item, ordermItem.Quantity)
-		}
-	}
+	// if len(ordermItems) > 0 {
+	// 	for _, ordermItem := range ordermItems {
+	// 		item, err := u.itemRepo.FindByID(ordermItem.ItemID)
+	// 		if err != nil {
+	// 			return orderOutput, err
+	// 		}
+	// 		order.AddItem(item, ordermItem.Quantity)
+	// 	}
+	// }
 
 	if order.Coupon.Code != "" {
 		coupon, err := u.couponRepo.FindByCode(order.Coupon.Code)

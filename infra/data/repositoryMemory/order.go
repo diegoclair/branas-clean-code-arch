@@ -15,8 +15,9 @@ func NewOrderRepositoryMemory() contract.OrderRepository {
 	return &orderRepositoryMemory{}
 }
 
-func (r *orderRepositoryMemory) Save(order entity.Order) (err error) {
-	r.orders = append(r.orders, order)
+func (r *orderRepositoryMemory) Save(order *entity.Order) (err error) {
+	order.Total = order.GetTotal()
+	r.orders = append(r.orders, *order)
 	return nil
 }
 

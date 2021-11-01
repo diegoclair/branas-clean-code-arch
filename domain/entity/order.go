@@ -16,6 +16,7 @@ type Order struct {
 	Coupon     Coupon
 	Freight    float64
 	IssueDate  time.Time
+	Total      float64
 	Sequence   int64
 }
 
@@ -57,7 +58,8 @@ func (o *Order) GetTotal() (total float64) {
 	if o.Coupon.Percentage > 0 {
 		total -= total * (float64(o.Coupon.Percentage) / 100)
 	}
-	return utils.Round(total, 2)
+	o.Total = utils.Round(total, 2)
+	return o.Total
 }
 
 type OrderItem struct {
