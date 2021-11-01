@@ -72,16 +72,6 @@ func (u *orderUsecase) GetOrderByCode(code string) (orderOutput dto.OrderOutput,
 		return orderOutput, err
 	}
 
-	// if len(ordermItems) > 0 {
-	// 	for _, ordermItem := range ordermItems {
-	// 		item, err := u.itemRepo.FindByID(ordermItem.ItemID)
-	// 		if err != nil {
-	// 			return orderOutput, err
-	// 		}
-	// 		order.AddItem(item, ordermItem.Quantity)
-	// 	}
-	// }
-
 	if order.Coupon.Code != "" {
 		coupon, err := u.couponRepo.FindByCode(order.Coupon.Code)
 		if err != nil {
