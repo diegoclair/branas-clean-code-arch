@@ -31,11 +31,3 @@ func (i Item) GetVolume() float64 {
 func (i Item) GetDensity() float64 {
 	return i.Weight / i.GetVolume()
 }
-
-func (i Item) GetFreight() float64 {
-	freight := 1000 * i.GetVolume() * (i.GetDensity() / 100)
-	if freight < 10 {
-		return 10
-	}
-	return freight
-}

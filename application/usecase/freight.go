@@ -10,9 +10,9 @@ type freightUsecase struct {
 	itemRepo contract.ItemRepository
 }
 
-func NewFreightUsecase(db contract.RepoManager) *freightUsecase {
+func newFreightUsecase(us *Usecase) *freightUsecase {
 	return &freightUsecase{
-		itemRepo: db.Item(),
+		itemRepo: us.db.Item(),
 	}
 }
 

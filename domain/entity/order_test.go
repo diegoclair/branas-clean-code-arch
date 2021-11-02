@@ -198,36 +198,6 @@ func TestNewOrderItem(t *testing.T) {
 	}
 }
 
-func TestCalculateOrderFreight(t *testing.T) {
-	type args struct {
-		document string
-	}
-	tests := []struct {
-		name string
-		args args
-	}{
-		{
-			name: "Should create an order with 3 items and calculate it freight",
-			args: args{
-				document: "012.345.678-90",
-			},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			order, _ := NewOrder(tt.args.document, 1)
-			order.AddItem(itemGuitarra, 1)
-			order.AddItem(itemAplificador, 1)
-			order.AddItem(itemCabo, 3)
-			const freightShouldBe = 260
-			if order.Freight != freightShouldBe {
-				t.Errorf("GetFreight() got %v, want %v", order.Freight, freightShouldBe)
-			}
-		})
-	}
-}
-
 func TestNewOrderCodeValidation(t *testing.T) {
 
 	type args struct {

@@ -1,22 +1,26 @@
 package usecase
 
 import (
+	"fmt"
+
 	"github.com/diegoclair/branas-clean-code-arch/application/dto"
 	"github.com/diegoclair/branas-clean-code-arch/domain/contract"
 	"github.com/diegoclair/branas-clean-code-arch/domain/entity"
 )
 
 type orderUsecase struct {
-	itemRepo   contract.ItemRepository
-	orderRepo  contract.OrderRepository
-	couponRepo contract.CouponRepository
+	itemRepo       contract.ItemRepository
+	orderRepo      contract.OrderRepository
+	couponRepo     contract.CouponRepository
+	freightUsecase FreightUsecase
 }
 
-func NewOrderUsecase(db contract.RepoManager) *orderUsecase {
+func newOrderUsecase(us *Usecase, freightUsecase FreightUsecase) *orderUsecase {
 	return &orderUsecase{
-		itemRepo:   db.Item(),
-		orderRepo:  db.Order(),
-		couponRepo: db.Coupon(),
+		itemRepo:       us.db.Item(),
+		orderRepo:      us.db.Order(),
+		couponRepo:     us.db.Coupon(),
+		freightUsecase: freightUsecase,
 	}
 }
 
@@ -45,15 +49,28 @@ func (u *orderUsecase) PlaceOrder(input dto.CreateOrderInput) (response dto.Crea
 		}
 	}
 
+	var freight float64 = 0
 	for _, orderItem := range input.OrderItems {
 
 		item, err := u.itemRepo.FindByID(orderItem.ItemID)
 		if err != nil {
 			return response, err
 		}
+		fmt.Println("BEFORE PANIC")
+		result, err := u.freightUsecase.FreightSimulation(dto.FreightSimulationInput{
+			Items: []dto.OrderItems{
+				orderItem,
+			},
+		})
+		if err != nil {
+			return response, err
+		}
+		freight += result
+		fmt.Println(freight)
 		order.AddItem(item, orderItem.Quantity)
 	}
 
+	order.Freight = freight
 	err = u.orderRepo.Save(&order)
 	if err != nil {
 		return response, err
