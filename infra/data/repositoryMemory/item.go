@@ -11,7 +11,7 @@ type itemRepositoryMemory struct {
 	items []entity.Item
 }
 
-func NewItemRepositoryMemory() contract.ItemRepository {
+func newItemRepositoryMemory() contract.ItemRepository {
 	return &itemRepositoryMemory{
 		items: []entity.Item{
 			entity.NewItem(1, "Instrumentos Musicais", "Guitarra", 1119, 100, 30, 10, 3),

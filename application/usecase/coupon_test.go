@@ -24,7 +24,7 @@ func TestCouponValidation(t *testing.T) {
 		{
 			name: "Should validate a valid coupon",
 			fields: fields{
-				couponRepo: repositorymemory.NewCouponRepositoryMemory(),
+				couponRepo: repositorymemory.New().Coupon(),
 			},
 			args: args{
 				code: "VALE20",

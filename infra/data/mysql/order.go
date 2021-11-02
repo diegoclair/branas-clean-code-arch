@@ -11,7 +11,7 @@ type orderDatabase struct {
 	conn connenction
 }
 
-func NewOrderDatabase(conn connenction) contract.OrderRepository {
+func newOrderDatabase(conn connenction) contract.OrderRepository {
 	return &orderDatabase{
 		conn: conn,
 	}

@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/GuiaBolso/darwin"
+	"github.com/diegoclair/branas-clean-code-arch/domain/contract"
 	"github.com/diegoclair/branas-clean-code-arch/infra/config"
 	"github.com/diegoclair/branas-clean-code-arch/infra/data/migrations"
 	"github.com/diegoclair/go_utils-lib/v2/logger"
@@ -14,13 +15,17 @@ import (
 )
 
 var (
-	conn    *sql.DB
+	conn    *mysqlConn
 	onceDB  sync.Once
 	connErr error
 )
 
+type mysqlConn struct {
+	db *sql.DB
+}
+
 //Connect returns a connection of MySQL
-func Connect() (conn *sql.DB, err error) {
+func Connect() (contract.RepoManager, error) {
 	onceDB.Do(func() {
 		cfg := config.GetConfigEnvironment()
 
@@ -71,8 +76,22 @@ func Connect() (conn *sql.DB, err error) {
 
 		logger.Info("Migrations executed")
 
-		conn = db
+		conn = &mysqlConn{
+			db: db,
+		}
 	})
 
 	return conn, connErr
+}
+
+func (c *mysqlConn) Coupon() contract.CouponRepository {
+	return newCouponDatabase(c.db)
+}
+
+func (c *mysqlConn) Item() contract.ItemRepository {
+	return newItemDatabase(c.db)
+}
+
+func (c *mysqlConn) Order() contract.OrderRepository {
+	return newOrderDatabase(c.db)
 }

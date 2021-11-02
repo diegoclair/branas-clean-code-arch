@@ -6,9 +6,9 @@ type couponUsecase struct {
 	couponRepo contract.CouponRepository
 }
 
-func NewCouponUsecase(couponRepo contract.CouponRepository) *couponUsecase {
+func NewCouponUsecase(db contract.RepoManager) *couponUsecase {
 	return &couponUsecase{
-		couponRepo: couponRepo,
+		couponRepo: db.Coupon(),
 	}
 }
 

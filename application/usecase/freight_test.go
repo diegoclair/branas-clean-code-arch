@@ -9,7 +9,7 @@ import (
 
 func TestSimulateFreight(t *testing.T) {
 
-	itemRepo := repositorymemory.NewItemRepositoryMemory()
+	itemRepo := repositorymemory.New().Item()
 
 	tests := []struct {
 		name        string

@@ -2,6 +2,12 @@ package contract
 
 import "github.com/diegoclair/branas-clean-code-arch/domain/entity"
 
+type RepoManager interface {
+	Coupon() CouponRepository
+	Item() ItemRepository
+	Order() OrderRepository
+}
+
 type CouponRepository interface {
 	FindByCode(code string) (entity.Coupon, error)
 }

@@ -9,7 +9,7 @@ type couponDatabase struct {
 	conn connenction
 }
 
-func NewCouponDatabase(conn connenction) contract.CouponRepository {
+func newCouponDatabase(conn connenction) contract.CouponRepository {
 	return &couponDatabase{
 		conn: conn,
 	}

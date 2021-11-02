@@ -11,8 +11,10 @@ type orderRepositoryMemory struct {
 	orders []entity.Order
 }
 
-func NewOrderRepositoryMemory() contract.OrderRepository {
-	return &orderRepositoryMemory{}
+func newOrderRepositoryMemory() contract.OrderRepository {
+	return &orderRepositoryMemory{
+		orders: []entity.Order{},
+	}
 }
 
 func (r *orderRepositoryMemory) Save(order *entity.Order) (err error) {

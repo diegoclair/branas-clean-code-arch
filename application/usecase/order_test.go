@@ -13,9 +13,10 @@ import (
 
 func TestPlaceOrder(t *testing.T) {
 
-	itemRepo := repositorymemory.NewItemRepositoryMemory()
-	orderRepo := repositorymemory.NewOrderRepositoryMemory()
-	couponRepo := repositorymemory.NewCouponRepositoryMemory()
+	repoMemo := repositorymemory.New()
+	itemRepo := repoMemo.Item()
+	orderRepo := repoMemo.Order()
+	couponRepo := repoMemo.Coupon()
 
 	tests := []struct {
 		name      string
@@ -105,9 +106,10 @@ func TestPlaceOrder(t *testing.T) {
 
 func TestGetOrderByCode(t *testing.T) {
 
-	orderRepo := repositorymemory.NewOrderRepositoryMemory()
-	itemRepo := repositorymemory.NewItemRepositoryMemory()
-	couponRepo := repositorymemory.NewCouponRepositoryMemory()
+	repoMemo := repositorymemory.New()
+	itemRepo := repoMemo.Item()
+	orderRepo := repoMemo.Order()
+	couponRepo := repoMemo.Coupon()
 
 	code := prepareOrderInput(orderRepo, itemRepo, couponRepo)
 	type args struct {
@@ -156,9 +158,10 @@ func TestGetOrderByCode(t *testing.T) {
 
 func Test_orderUsecase_GetOrders(t *testing.T) {
 
-	orderRepo := repositorymemory.NewOrderRepositoryMemory()
-	itemRepo := repositorymemory.NewItemRepositoryMemory()
-	couponRepo := repositorymemory.NewCouponRepositoryMemory()
+	repoMemo := repositorymemory.New()
+	itemRepo := repoMemo.Item()
+	orderRepo := repoMemo.Order()
+	couponRepo := repoMemo.Coupon()
 
 	//add 2 orders
 	_ = prepareOrderInput(orderRepo, itemRepo, couponRepo)

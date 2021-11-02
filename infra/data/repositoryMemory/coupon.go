@@ -12,7 +12,7 @@ type couponRepositoryMemory struct {
 	coupons []entity.Coupon
 }
 
-func NewCouponRepositoryMemory() contract.CouponRepository {
+func newCouponRepositoryMemory() contract.CouponRepository {
 	return &couponRepositoryMemory{
 		coupons: []entity.Coupon{
 			{

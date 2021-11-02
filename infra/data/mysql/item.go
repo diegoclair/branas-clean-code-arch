@@ -9,7 +9,7 @@ type itemDatabase struct {
 	conn connenction
 }
 
-func NewItemDatabase(conn connenction) contract.ItemRepository {
+func newItemDatabase(conn connenction) contract.ItemRepository {
 	return &itemDatabase{
 		conn: conn,
 	}

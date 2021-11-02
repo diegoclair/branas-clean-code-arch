@@ -12,11 +12,11 @@ type orderUsecase struct {
 	couponRepo contract.CouponRepository
 }
 
-func NewOrderUsecase(itemRepo contract.ItemRepository, orderRepo contract.OrderRepository, couponRepo contract.CouponRepository) *orderUsecase {
+func NewOrderUsecase(db contract.RepoManager) *orderUsecase {
 	return &orderUsecase{
-		itemRepo:   itemRepo,
-		orderRepo:  orderRepo,
-		couponRepo: couponRepo,
+		itemRepo:   db.Item(),
+		orderRepo:  db.Order(),
+		couponRepo: db.Coupon(),
 	}
 }
 
@@ -32,11 +32,13 @@ func (u *orderUsecase) PlaceOrder(input dto.CreateOrderInput) (response dto.Crea
 	if err != nil {
 		return response, err
 	}
+
 	if input.Coupon != "" {
 		coupon, err := u.couponRepo.FindByCode(input.Coupon)
 		if err != nil {
 			return response, err
 		}
+
 		err = order.AddCoupon(coupon)
 		if err != nil {
 			return response, err
