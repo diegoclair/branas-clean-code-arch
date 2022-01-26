@@ -56,7 +56,6 @@ func (u *orderUsecase) PlaceOrder(input dto.CreateOrderInput) (response dto.Crea
 		if err != nil {
 			return response, err
 		}
-		fmt.Println("BEFORE PANIC")
 		result, err := u.freightUsecase.FreightSimulation(dto.FreightSimulationInput{
 			Items: []dto.OrderItems{
 				orderItem,
